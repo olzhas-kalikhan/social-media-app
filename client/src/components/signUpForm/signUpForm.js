@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, Form, Input, Button, Checkbox } from 'antd';
+import axios from 'axios';
 const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -26,10 +27,16 @@ const validatePassword = (rule, value, callback) => {
 const SignUpForm = (props) => {
     const [form] = Form.useForm();
     const { visible, onCancel } = props;
-    const onFinish = values => {
-        console.log('Success:', values);
+    const onFinish = async (values) => {
+        try {
+            console.log('Success:', values);
+            let response = await axios.post('/user/signup', values);
+            console.log(response);
+        }
+        catch (e) {
+            console.log(e)
+        }
     };
-
     const onFinishFailed = errorInfo => {
         console.log('Failed:', errorInfo);
     };
@@ -83,7 +90,6 @@ const SignUpForm = (props) => {
                         { min: 8 },
                         { validator: validatePassword }
                     ]}
-                    hasFeedback
                 >
                     <Input.Password />
                 </Form.Item>
@@ -112,7 +118,7 @@ const SignUpForm = (props) => {
                 <Form.Item {...tailLayout}>
                     <Button type="primary" htmlType="submit">
                         Sign Up
-                </Button>
+                    </Button>
                 </Form.Item>
             </Form>
         </Modal >
