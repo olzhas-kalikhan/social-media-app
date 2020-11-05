@@ -1,42 +1,44 @@
-const LocalStrategy = require('passport-local')
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
-
-const User = require('../models/User')
+const LocalStrategy = require('passport-local').Strategy;
 const JWTstrategy = require('passport-jwt').Strategy;
-const ExtractJWT = require('passport-jwt').ExtractJwt;
+const User = require('../models/User')
+
+const cookieExtractor = (req, res) => {
+    let token = null
+    if (req && req.cookies) {
+        token = req.cookies["access_token"]
+    }
+    return token
+}
 
 module.exports = (passport) => {
-    passport.serializeUser(function (user, done) {
-        done(null, user.id);
-    });
-    passport.deserializeUser(function (id, done) {
-        User.findById(id, function (err, user) {
-            done(err, user);
-        });
-    });
+    //authentication
     passport.use(
         new LocalStrategy({
             usernameField: 'email',
-            passwordField: 'password'
         },
             (email, password, done) => {
-                User.findOne({ email })
-                    .then(user => {
-                        if (!user) {
-                            return done(null, false, { message: 'That email not registered' })
-                        }
-                        bcrypt.compare(password, user.password, (err, isMatch) => {
-                            if (err) throw err
-                            if (isMatch) {
-                                return done(null, user)
-                            }
-                            else {
-                                return done(null, false, { message: 'Password incorrect' })
-                            }
-                        })
-                    })
-                    .catch(err => done(err))
+                User.findOne({ email }, (err, user) => {
+                    //Something went wrong on DB
+                    if (err) return done(err)
+                    //User not found
+                    if (!user) return done(null, false)
+                    //Check if password is correct
+                    user.comparePassword(password, done)
+
+                })
+
             })
     )
+    //authorization
+    passport.use(new JWTstrategy({
+        jwtFromRequest: cookieExtractor,
+        secretOrKey: 'TOP_SECRET'
+    }, (payload, done) => {
+        User.findById({ _id: payload.sub }, (err, user) => {
+            if (err) return done(err, false)
+            if (user) return done(null, user)
+            else return done(null, false)
+        })
+    }))
+
 }

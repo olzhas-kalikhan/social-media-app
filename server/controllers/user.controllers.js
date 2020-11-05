@@ -1,23 +1,50 @@
 const User = require('../models/User')
-const bcrypt = require('bcrypt')
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
-const router = require('../routes/user.routes')
+const { BadRequest, NotFound } = require('../utils/erros')
+const signToken = userId => {
+    return jwt.sign({
+        iss: "TOP_SECRET",
+        sub: userId
+    }, "TOP_SECRET", { expiresIn: "5m" })
+}
 
-exports.profile = (req, res, next) => {
-    console.log(req.session.token+'')
-    if (req.session.token) {
-        let userData = jwt.verify(req.session.token, 'TOP_SECRET')
-        return res.status(200).json({
-            ...userData,
-            status: 200,
-            token: req.session.token
-        })
+exports.register = (req, res, next) => {
+    const { email, name, password, role } = req.body
+    User.findOne({ email }, (err, user) => {
+        try {
+            if (err)
+                return next(err)
+            if (user)
+                throw new BadRequest('Email already exist')
+            //return res.status(400).json({ message: { msgBody: "Email already exist", msgError: true } })
+            else {
+                const newUser = new User({ email, name, password, role })
+                newUser.save(err => {
+                    if (err)
+                        return next(err)
+                    //return res.status(500).json({ message: { msgBody: "Error has occured", msgError: true } })
+                    else
+                        return res.status(201).json({ message: { msgBody: "Account succesfully created", msgError: false } })
+                })
+            }
+        }
+        catch (err) { return next(err) }
+    })
+}
+exports.login = (req, res) => {
+    if (req.isAuthenticated()) {
+        const { _id, email, role, date, name } = req.user
+        const token = signToken(_id)
+        res.cookie('access_token', token, { httpOnly: true, sameSite: true })
+        return res.status(200).json({ isAuthenticated: true, user: { email, role, date, name } })
     }
-    else
-        return res.status(500).json({
-            message: 'An error occured',
-            status: 500,
-            user: req.user
-        })
+}
+exports.logout = (req, res) => {
+    res.clearCookie('access_token')
+    return res.json({ user: { username: "", role: "", date: "", name: "" }, success: true })
+}
+exports.authenticated = (req, res) => {
+    const { email, role, date, name } = req.user
+    return res.status(200).json({ isAuthenticated: true, user: { email, role, date, name } })
 }
