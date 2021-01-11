@@ -17,7 +17,13 @@ const mainTheme = createMuiTheme({
             fontWeight: '600',
             fontFamily: "'Varela Round', sans-serif",
             fontSize: '1.5rem'
+        },
+        subtitle1: {
+            fontWeight: '600',
+            fontFamily: "'Varela Round', sans-serif",
+            fontSize: '1.1rem'
         }
+
     }
 })
 

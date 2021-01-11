@@ -19,6 +19,12 @@ const UserSchema = new mongoose.Schema({
         required: true,
         default: 'User'
     },
+    following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    profileImage: {
+        type: String,
+        required: true,
+        default: 'https://cdn.pixabay.com/photo/2016/08/31/11/54/user-1633249_1280.png'
+    },
     date: {
         type: Date,
         default: Date.now()

@@ -19,13 +19,12 @@ export default {
         }).then(response => response.data)
     },
     logout: () => {
-        return axios.get('/user/logout')
-            .then(response => response.data)
+        return fetch('/user/logout')
+            .then(res => res.json().then(data => data))
     },
-    isAuthenticated: async () => {
+    isAuthenticated: () => {
         return fetch('/user/authenticated')
             .then(res => {
-                console.log(res)
                 if (res.status !== 401)
                     return res.json().then(data => data)
                 else

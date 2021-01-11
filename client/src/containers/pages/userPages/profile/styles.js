@@ -17,6 +17,7 @@ const useStyle = makeStyles((theme) => ({
         position: 'relative'
     },
     avatar: {
+        backgroundColor: 'white',
         border: '4px solid black',
         position: 'absolute',
         top: theme.spacing(-8),

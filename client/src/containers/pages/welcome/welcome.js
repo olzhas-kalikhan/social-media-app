@@ -6,14 +6,18 @@ import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 
 import Login from 'components/Forms/login/login'
+import Register from 'components/Forms/login/register'
 import Modal from 'containers/modal/modal'
 
 const Welcome = (props) => {
     const { classes } = props
 
     const [loginOpen, setLoginOpen] = useState(false)
+    const [registerOpen, setRegisterOpen] = useState(false)
     const handleLoginOpen = () => setLoginOpen(true)
     const handleLoginClose = () => setLoginOpen(false)
+    const handleRegisterOpen = () => setRegisterOpen(true)
+    const handleRegisterClose = () => setRegisterOpen(false)
     return (
         <div className={classes.root}>
             <Grid
@@ -34,6 +38,7 @@ const Welcome = (props) => {
                     </Button>
                     <Button
                         className={classes.menuItem}
+                        onClick={handleRegisterOpen}
                         variant="contained"
                         color="primary"
                         size="large"
@@ -49,6 +54,14 @@ const Welcome = (props) => {
             >
                 <Login history={props.history} />
             </Modal>
+            <Modal
+                title='Sign Up'
+                open={registerOpen}
+                onClose={handleRegisterClose}
+            >
+                <Register history={props.history} />
+            </Modal>
+
         </div>
     )
 }

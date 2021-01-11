@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { useStyle } from './styles'
 import { AuthContext } from 'context/user/authContext'
-import { dateToString } from './helper'
-
+import { dateToString } from 'utils/dateUtils'
+import { DropzoneDialog } from 'material-ui-dropzone'
 
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
@@ -11,22 +11,46 @@ import Tab from '@material-ui/core/Tab'
 import Avatar from '@material-ui/core/Avatar'
 import Typography from '@material-ui/core/Typography'
 
+import IconButton from '@material-ui/core/IconButton'
 import { a11yProps, TabPanel } from 'components/tabPanel/tabPanel'
 import PostsTab from './postsTab/postsTab'
+import Modal from 'containers/modal/modal'
+import ProfileImageDropzone from './profileImageDropzone/profileImageDropzone'
 
+import UserService from 'services/user/user'
 const ProfilePage = (props) => {
     const { user } = useContext(AuthContext)
-    const [tabValue, setTabValue] = React.useState(0);
+    const [tabValue, setTabValue] = useState(0);
+    const [openAvatarModal, setAvatarModal] = useState(false)
+    const [imageToUpload, setImageToUpload] = useState()
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
     const classes = useStyle()
-    console.log(user.date)
+    const handleAvatarModalOpen = () => {
+        setAvatarModal(true)
+    }
+    const handleAvatarModalClose = () => {
+        setAvatarModal(false)
+    }
+    const handleProfileImageChange = (files) => {
+        setImageToUpload(files)
+    }
+    const handleProfileImageSave = () => {
+        console.log(imageToUpload)
+        const formData = new FormData();
+        formData.append('myfile', imageToUpload);
+        UserService.uploadProfileImage(formData[0])
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+    }
     return (
         <div className={classes.root}>
             <div className={classes.banner}> </div>
             <div className={classes.infoPanel}>
-                <Avatar className={classes.avatar} />
+                <IconButton disableRipple onClick={handleAvatarModalOpen}>
+                    <Avatar className={classes.avatar} src={user.profileImage} />
+                </IconButton>
                 <div className={classes.profileInfo}>
                     <Typography variant='h6'>{user.name}</Typography>
                     <Typography variant='body2'>Joined {dateToString(user.date)}</Typography>
@@ -41,7 +65,17 @@ const ProfilePage = (props) => {
                     </div>
                 </div>
             </div>
-            <div></div>
+            <DropzoneDialog
+                open={openAvatarModal}
+                onClose={handleAvatarModalClose}
+                onDrop={handleProfileImageChange}
+                onSave={handleProfileImageSave}
+                acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
+                showPreviews={true}
+            />
+
+
+
         </div>
     )
 }

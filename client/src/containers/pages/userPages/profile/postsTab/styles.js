@@ -13,7 +13,11 @@ export const useStyle = makeStyles(theme => ({
         margin: theme.spacing(1, 0)
     },
     submitButton: {
-        alignSelf: 'flex-end',
-        margin: theme.spacing(1, 5)
+        alignSelf: 'flex-center',
+        margin: theme.spacing(1, 5),
+        width: '40%'
+    },
+    postList:{
+        width:'90%',
     }
 }))

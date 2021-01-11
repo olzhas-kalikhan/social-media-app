@@ -8,48 +8,50 @@ import Button from '@material-ui/core/Button'
 import { AuthContext } from 'context/user/authContext'
 import AuthService from 'services/auth/auth'
 
-const Login = (props) => {
+const Register = (props) => {
     const { classes } = props;
     const authContext = useContext(AuthContext)
     const [message, setMessage] = useState(null)
     const [form, setForm] = useState({
+        name: '',
         email: '',
-        password: ''
+        password: '',
     });
     const handleEmailChange = (e) => {
-        setForm(prev => {
-            return {
-                ...prev,
-                email: e.target.value
-            }
-        })
+        setForm(prev => ({
+            ...prev,
+            email: e.target.value
+        }))
     }
     const handlePasswordChange = (e) => {
-        setForm(prev => {
-            return {
-                ...prev,
-                password: e.target.value
-            }
-        })
+        setForm(prev => ({
+            ...prev,
+            password: e.target.value
+        }))
+    }
+    const handleNameChange = (e) => {
+        setForm(prev => ({
+            ...prev,
+            name: e.target.value
+        }))
     }
     const handleSubmit = async (event) => {
         event.preventDefault()
-        AuthService.login(form).then(data => {
-
-            const { isAuthenticated, user, message } = data
-            if (isAuthenticated) {
-                authContext.setUser(user)
-                authContext.setIsAuthenticated(isAuthenticated)
-                props.history.push('/home')
-            }
-            else{
-                setMessage(message)
-            }
+        AuthService.register(form).then(data => {
+            console.log(data)
         })
 
     }
     return (
         <form className={classes.root} onSubmit={handleSubmit}>
+            <TextField
+                className={classes.formElement}
+                id="name"
+                label="name"
+                type="text"
+                variant="outlined"
+                onChange={handleNameChange}
+            />
             <TextField
                 className={classes.formElement}
                 id="email"
@@ -67,14 +69,20 @@ const Login = (props) => {
                 variant="outlined"
                 onChange={handlePasswordChange}
             />
-
+            <TextField
+                className={classes.formElement}
+                id="confirmPassword"
+                label="confirmPassword"
+                type="password"
+                variant="outlined"
+            />
             <Button
                 className={classes.formElement}
-                type="submit"
                 variant="contained"
                 color="primary"
+                onClick={handleSubmit}
             >
-                Login
+                SignUp
             </Button>
 
 
@@ -82,4 +90,4 @@ const Login = (props) => {
     )
 }
 
-export default withStyles(styles)(Login)
+export default withStyles(styles)(Register)

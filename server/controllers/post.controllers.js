@@ -4,17 +4,21 @@ require('../config/passport')(passport)
 const { BadRequest, NotFound } = require('../utils/erros')
 
 const getPostsById = (id, req, res, next) => {
-    Post.find({ postedBy: id }, (err, posts) => {
-        try {
-            if (err)
-                return next(err)
-            if (posts.length > 0)
-                return res.status(200).json({ message: { msgBody: "Posts found", msgError: false, posts } })
-            else
-                throw new NotFound("Posts not found")
-        }
-        catch (err) { return next(err) }
-    })
+    Post.find({ postedBy: id })
+        .sort('-date')
+        .limit(10)
+        .populate('postedBy', 'name email profileImage')
+        .exec((err, posts) => {
+            try {
+                if (err)
+                    return next(err)
+                if (posts.length > 0)
+                    return res.status(200).json({ message: { msgBody: "Posts found", msgError: false }, posts })
+                else
+                    throw new NotFound("Posts not found")
+            }
+            catch (err) { return next(err) }
+        })
 }
 
 exports.createPost = (req, res, next) => {

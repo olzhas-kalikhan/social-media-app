@@ -12,24 +12,32 @@ import { items } from 'parts/sideNav/items'
 const useStyle = makeStyles(theme => ({
     root: {
         display: 'flex',
-        height: '100vh'
+        height: '100vh',
+        padding: theme.spacing(0, 10),
+        [theme.breakpoints.down('sm')]: {
+            padding: theme.spacing(0, 0)
+        },
     },
     content: {
         width: '50%',
+        overflowY: 'auto',
         [theme.breakpoints.down('sm')]: {
-            width:'85%'
+            width: '85%'
         },
         [theme.breakpoints.down('xs')]: {
             width: '100%'
         }
+
     },
     sidebar: {
         height: '100%',
         maxWidth: '25%',
         width: '25%',
-
+        backgroundColor: 'lightyellow',
+        display: 'flex',
+        flexDirection: 'column',
         [theme.breakpoints.down('sm')]: {
-            width:'15%'
+            width: '15%'
         },
         [theme.breakpoints.down('xs')]: {
             display: 'none'
@@ -46,17 +54,18 @@ const useStyle = makeStyles(theme => ({
 
 const UserLayout = (props) => {
     const classes = useStyle()
-    const { children, title } = props
-    const [selected, setSelected] = useState(0)
+    const { children, location } = props
+    const currentSelectedIndex = items.findIndex(item => item.path === location.pathname)
+    const [selected, setSelected] = useState(currentSelectedIndex)
     return (
-        <Container className={classes.root} fluid>
+        <div className={classes.root} >
             <SideNav className={classes.sidebar} items={items} selected={selected} onClick={setSelected} />
             <div className={classes.content}>
                 <Header title={items[selected].title} />
                 {children}
             </div>
             <SideInfo className={classes.sideInfo} />
-        </Container>
+        </div>
     )
 }
 export default UserLayout
