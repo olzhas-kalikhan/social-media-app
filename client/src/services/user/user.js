@@ -24,7 +24,7 @@ export default {
         return fetch('/user/uploadProfileImage', {
             method: 'POST',
             headers: {
-                'content-type': 'multipart/form-data'
+                'Content-type': 'image/jpeg'
             },
             body: formData,
         })

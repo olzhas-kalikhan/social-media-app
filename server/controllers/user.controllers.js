@@ -1,6 +1,5 @@
 const keys = require('../config/keys')
 const User = require('../models/User')
-const passport = require('passport')
 const jwt = require('jsonwebtoken')
 
 
@@ -15,20 +14,24 @@ const signToken = userId => {
     return jwt.sign({
         iss: "TOP_SECRET",
         sub: userId
-    }, "TOP_SECRET", { expiresIn: "20m" })
+    }, "TOP_SECRET", { expiresIn: "1h" })
 }
 
 exports.register = (req, res, next) => {
-    const { email, name, password, role } = req.body
-    User.findOne({ email }, (err, user) => {
+    const { email, name, username, password, role } = req.body
+    User.findOne({ $or: [{ email }, { username }] }, (err, user) => {
         try {
             if (err)
                 return next(err)
-            if (user)
-                throw new BadRequest('Email already exist')
+            if (user) {
+                if (user.email === email)
+                    throw new BadRequest('Email already exist')
+                if (user.username === username)
+                    throw new BadRequest('Username already taken')
+            }
             //return res.status(400).json({ message: { msgBody: "Email already exist", msgError: true } })
             else {
-                const newUser = new User({ email, name, password, role })
+                const newUser = new User({ email, name, username, password, role })
                 newUser.save(err => {
                     if (err)
                         return next(err)
@@ -43,19 +46,19 @@ exports.register = (req, res, next) => {
 }
 exports.login = (req, res) => {
     if (req.isAuthenticated()) {
-        const { _id, email, role, date, name, profileImage } = req.user
+        const { _id, email, role, date, name, username, profileImage } = req.user
         const token = signToken(_id)
         res.cookie('access_token', token, { httpOnly: true, sameSite: true })
-        return res.status(200).json({ isAuthenticated: true, user: { email, role, date, name, profileImage } })
+        return res.status(200).json({ isAuthenticated: true, user: { _id, email, role, date, username, name, profileImage } })
     }
 }
 exports.logout = (req, res) => {
     res.clearCookie('access_token')
-    return res.json({ user: { username: "", role: "", date: "", name: "", profileImage: "" }, success: true })
+    return res.json({ user: { email: "", username: "", role: "", date: "", name: "", profileImage: "" }, success: true })
 }
 exports.authenticated = (req, res) => {
-    const { email, role, date, name, profileImage } = req.user
-    return res.status(200).json({ isAuthenticated: true, user: { email, role, date, name, profileImage } })
+    const {_id, email, role, date, name, profileImage, username } = req.user
+    return res.status(200).json({ isAuthenticated: true, user: { _id, email, role, date, username, name, profileImage } })
 }
 
 exports.addFriend = (req, res, next) => {
@@ -101,6 +104,6 @@ exports.searchUser = (req, res, next) => {
 
 exports.uploadProfileImage = (req, res, next) => {
     const body = req.body
-    console.log(body, req.file)
+    console.log(body)
     return res.status(200).json(req.body)
 }

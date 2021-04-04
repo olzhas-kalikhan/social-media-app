@@ -4,18 +4,22 @@ import { withStyles } from '@material-ui/core/styles';
 
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+import { Typography, FormControl, InputLabel, Input, Link } from '@material-ui/core'
 
+import AlertMessage from 'components/Alert/alertMessage'
 import { AuthContext } from 'context/user/authContext'
 import AuthService from 'services/auth/auth'
 
 const Register = (props) => {
-    const { classes } = props;
+    const { classes, renderSignIn, history } = props;
     const authContext = useContext(AuthContext)
     const [message, setMessage] = useState(null)
     const [form, setForm] = useState({
+        username: '',
         name: '',
         email: '',
         password: '',
+        confirmPassword: '',
     });
     const handleEmailChange = (e) => {
         setForm(prev => ({
@@ -29,61 +33,75 @@ const Register = (props) => {
             password: e.target.value
         }))
     }
+    const handleUsernameChange = (e) => {
+        setForm(prev => ({
+            ...prev,
+            username: e.target.value
+        }))
+    }
     const handleNameChange = (e) => {
         setForm(prev => ({
             ...prev,
             name: e.target.value
         }))
     }
+    const handleConfirmPasswordChange = (e) => {
+        setForm(prev => ({
+            ...prev,
+            confirmPassword: e.target.value
+        }))
+    }
     const handleSubmit = async (event) => {
         event.preventDefault()
-        AuthService.register(form).then(data => {
-            console.log(data)
-        })
+        AuthService.register(form)
+            .then(data => {
+                console.log(data.status)
+                if (data.status !== 'error')
+                    history.push('/home')
+                else
+                    setMessage(data.message)
+            })
 
     }
     return (
         <form className={classes.root} onSubmit={handleSubmit}>
-            <TextField
-                className={classes.formElement}
-                id="name"
-                label="name"
-                type="text"
-                variant="outlined"
-                onChange={handleNameChange}
-            />
-            <TextField
-                className={classes.formElement}
-                id="email"
-                label="Email"
-                type="email"
-                variant="outlined"
-                onChange={handleEmailChange}
-
-            />
-            <TextField
-                className={classes.formElement}
-                id="password"
-                label="Password"
-                type="password"
-                variant="outlined"
-                onChange={handlePasswordChange}
-            />
-            <TextField
-                className={classes.formElement}
-                id="confirmPassword"
-                label="confirmPassword"
-                type="password"
-                variant="outlined"
-            />
+            <Typography variant="h1">SIGN UP</Typography>
+            <FormControl className={classes.formElement}>
+                <InputLabel htmlFor="username-signup">Username</InputLabel>
+                <Input id="username-signup" value={form.username} onChange={handleUsernameChange} />
+            </FormControl>
+            <FormControl className={classes.formElement}>
+                <InputLabel htmlFor="email-signup">Email</InputLabel>
+                <Input id="email-signup" type="email" value={form.email} onChange={handleEmailChange} />
+            </FormControl>
+            <FormControl className={classes.formElement}>
+                <InputLabel htmlFor="name-signup">Name</InputLabel>
+                <Input id="name-signup" value={form.name} onChange={handleNameChange} />
+            </FormControl>
+            <FormControl className={classes.formElement}>
+                <InputLabel htmlFor="password-signup">Password</InputLabel>
+                <Input id="password-signup" type="password" value={form.password} onChange={handlePasswordChange} />
+            </FormControl>
+            <FormControl className={classes.formElement}>
+                <InputLabel htmlFor="confirm-password-signup">Confirm Password</InputLabel>
+                <Input id="confirm-password-signup" type="password" value={form.confirmPassword} onChange={handleConfirmPasswordChange} />
+            </FormControl>
+            <AlertMessage message={message} setMessage={setMessage} severity="error" />
             <Button
-                className={classes.formElement}
+                className={classes.formBtnSubmit}
                 variant="contained"
                 color="primary"
-                onClick={handleSubmit}
+                type="submit"
             >
-                SignUp
+                <Typography variant="h3">
+                    Sign Up
+                </Typography>
+
             </Button>
+            <Typography >
+                Already have an account yet?
+                <Link onClick={renderSignIn}> Login</Link>
+            </Typography>
 
 
         </form>

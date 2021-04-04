@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: hidden; 
-  
+  background-color:#FAFAFA;
 }
 ::-webkit-scrollbar {
   width: 0px;  /* Remove scrollbar space */

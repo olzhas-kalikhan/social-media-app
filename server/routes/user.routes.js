@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const UserControllers = require('../controllers/user.controllers')
 const passport = require('passport')
-const User = require('../models/User')
 
 //require('../config/passport')(passport)
 //Registration

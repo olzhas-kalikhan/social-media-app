@@ -20,7 +20,11 @@ const { BadRequest } = require('./utils/erros');
 //db key
 const mongodbKey = keys.MongoURI;
 //Connect to Mongo
-mongoose.connect(mongodbKey, { useNewUrlParser: true, useUnifiedTopology: true, })
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
+mongoose.connect(mongodbKey)
     .then(() => console.log('MongoDB Connected...'))
     .catch(err => console.log(err))
 

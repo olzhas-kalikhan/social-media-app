@@ -35,9 +35,12 @@ module.exports = (passport) => {
         secretOrKey: 'TOP_SECRET'
     }, (payload, done) => {
         User.findById({ _id: payload.sub }, (err, user) => {
-            if (err) return done(err, false)
-            if (user) return done(null, user)
-            else return done(null, false)
+            if (err)
+                return done(err, false)
+            if (user)
+                return done(null, user)
+            else
+                return done(null, false)
         })
     }))
 

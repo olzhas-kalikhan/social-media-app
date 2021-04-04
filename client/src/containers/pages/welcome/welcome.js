@@ -12,12 +12,11 @@ import Modal from 'containers/modal/modal'
 const Welcome = (props) => {
     const { classes } = props
 
-    const [loginOpen, setLoginOpen] = useState(false)
-    const [registerOpen, setRegisterOpen] = useState(false)
-    const handleLoginOpen = () => setLoginOpen(true)
-    const handleLoginClose = () => setLoginOpen(false)
-    const handleRegisterOpen = () => setRegisterOpen(true)
-    const handleRegisterClose = () => setRegisterOpen(false)
+    const [signIn, setSignIn] = useState(true)
+    const renderSignIn = () => setSignIn(true)
+    const renderSignUp = () => setSignIn(false)
+
+
     return (
         <div className={classes.root}>
             <Grid
@@ -27,42 +26,16 @@ const Welcome = (props) => {
 
                 </Grid>
                 <Grid className={classes.menu} item xs={12} sm={6}>
-                    <Button
-                        className={classes.menuItem}
-                        onClick={handleLoginOpen}
-                        variant="outlined"
-                        color="primary"
-                        size="large"
-                    >
-                        Login
-                    </Button>
-                    <Button
-                        className={classes.menuItem}
-                        onClick={handleRegisterOpen}
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                    >
-                        Sign Up
-                    </Button>
+                    {signIn ?
+                        <Login history={props.history} renderSignUp={renderSignUp} /> :
+                        <Register history={props.history} renderSignIn={renderSignIn} />
+                    }
                 </Grid>
             </Grid>
-            <Modal
-                title='Login'
-                open={loginOpen}
-                onClose={handleLoginClose}
-            >
-                <Login history={props.history} />
-            </Modal>
-            <Modal
-                title='Sign Up'
-                open={registerOpen}
-                onClose={handleRegisterClose}
-            >
-                <Register history={props.history} />
-            </Modal>
+
 
         </div>
     )
 }
 export default withStyles(styles)(Welcome)
+//<Register history={props.history} />

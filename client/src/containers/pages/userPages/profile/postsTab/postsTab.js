@@ -33,30 +33,30 @@ const PostsTab = (props) => {
         fetchPosts()
     }, [])
     return (
-
-        <form className={classes.root} onSubmit={handleSubmit}>
-            <TextField
-                id="newPost"
-                className={classes.textArea}
-                onChange={handlePostChange}
-                placeholder="New Post"
-                multiline
-            />
-            <Button
-                className={classes.submitButton}
-                variant='contained'
-                color='primary'
-                type='submit'
-            >
-                Post
+        <>
+            <form className={classes.root} onSubmit={handleSubmit}>
+                <TextField
+                    id="newPost"
+                    className={classes.textArea}
+                    onChange={handlePostChange}
+                    placeholder="New Post"
+                    multiline
+                />
+                <Button
+                    className={classes.submitButton}
+                    variant='contained'
+                    color='primary'
+                    type='submit'
+                >
+                    Post
             </Button>
+            </form>
             <div className={classes.postList}>
                 {posts.map((post, i) => (
                     <PostItem post={post} key={`post-${i}-${post.date}`} />
                 ))}
             </div>
-        </form>
-
+        </>
     )
 }
 

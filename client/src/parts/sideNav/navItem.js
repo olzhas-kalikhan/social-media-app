@@ -12,7 +12,8 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         textDecoration: 'none',
         color: 'black',
-        justifyContent: 'center '
+        justifyContent: 'center ',
+        color: "#3B5998"
     },
     listItem: {
         display: 'flex',
@@ -26,7 +27,6 @@ const useStyles = makeStyles(theme => ({
 
     },
     selectedItem: {
-        color: "grey",
         backgroundColor:'none',
         "&hover": {
             background: "none",

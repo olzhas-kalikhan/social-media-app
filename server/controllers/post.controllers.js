@@ -1,13 +1,11 @@
 const Post = require('../models/Post')
-const passport = require('passport')
-require('../config/passport')(passport)
 const { BadRequest, NotFound } = require('../utils/erros')
 
 const getPostsById = (id, req, res, next) => {
     Post.find({ postedBy: id })
         .sort('-date')
         .limit(10)
-        .populate('postedBy', 'name email profileImage')
+        .populate('postedBy', 'name email username profileImage')
         .exec((err, posts) => {
             try {
                 if (err)
@@ -44,4 +42,29 @@ exports.getPostsByUserId = (req, res, next) => {
 exports.getPostsByCurrentUserId = (req, res, next) => {
     const { id } = req.user
     getPostsById(id, req, res, next)
+}
+
+exports.likeComment = (req, res, next) => {
+    const { id } = req.user
+    const { postId } = req.body
+    Post.findByIdAndUpdate(postId, { $push: { likes: id } }, (err, post) => {
+        if (err)
+            return next(err)
+        else {
+            return res.status(200).json({ post })
+        }
+
+    })
+}
+exports.unLikeComment = (req, res, next) => {
+    const { id } = req.user
+    const { postId } = req.body
+    Post.findByIdAndUpdate(postId, { $pull: { likes: id } }, (err, post) => {
+        if (err)
+            return next(err)
+        else {
+            return res.status(200).json({ post })
+        }
+
+    })
 }

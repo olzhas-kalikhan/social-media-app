@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core/styles'
 export const styles = ((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: 'lightgrey',
     height: '100vh',
   },
   menu: {
@@ -11,7 +10,6 @@ export const styles = ((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundColor: 'lightblue'
   },
   menuItem: {
     margin: theme.spacing(1),

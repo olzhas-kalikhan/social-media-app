@@ -40,19 +40,21 @@ const ProfilePage = (props) => {
         console.log(imageToUpload)
         const formData = new FormData();
         formData.append('myfile', imageToUpload);
-        UserService.uploadProfileImage(formData[0])
+        UserService.uploadProfileImage(imageToUpload)
             .then(res => console.log(res))
             .catch(err => console.log(err))
     }
     return (
         <div className={classes.root}>
-            <div className={classes.banner}> </div>
-            <div className={classes.infoPanel}>
+            <div className={classes.banner}>
                 <IconButton disableRipple onClick={handleAvatarModalOpen}>
                     <Avatar className={classes.avatar} src={user.profileImage} />
                 </IconButton>
+            </div>
+            <div className={classes.infoPanel}>
+
                 <div className={classes.profileInfo}>
-                    <Typography variant='h6'>{user.name}</Typography>
+                    <Typography variant='h2'>{user.name}</Typography>
                     <Typography variant='body2'>Joined {dateToString(user.date)}</Typography>
                     <div className={classes.tabs}>
                         <Tabs variant='fullWidth' value={tabValue} onChange={handleTabChange}>

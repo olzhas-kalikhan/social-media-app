@@ -12,15 +12,16 @@ export default {
             .then(data => data)
     },
     register: user => {
-        return axios('/user/register', {
+        return fetch('/user/register', {
             method: 'POST',
-            data: user,
+            body: JSON.stringify(user),
             headers: { 'Content-Type': 'application/json' }
-        }).then(response => response.data)
+        }).then(res => res.json())
+            .then(data => data)
     },
     logout: () => {
         return fetch('/user/logout')
-            .then(res => res.json().then(data => data))
+            .then(res => res.json()).then(data => data)
     },
     isAuthenticated: () => {
         return fetch('/user/authenticated')

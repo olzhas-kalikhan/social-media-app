@@ -3,24 +3,26 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import SideNav from 'parts/sideNav/sideNav'
 import SideInfo from 'parts/sideInfo/sideInfo'
-import Header from 'parts/header/header'
-
+import Navbar from 'parts/navbar/navbar'
+import { Grid } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 
 import { items } from 'parts/sideNav/items'
 
 const useStyle = makeStyles(theme => ({
     root: {
-        display: 'flex',
-        height: '100vh',
-        padding: theme.spacing(0, 10),
-        [theme.breakpoints.down('sm')]: {
-            padding: theme.spacing(0, 0)
-        },
+        height: '95vh',
+        maxHeight: '95vh',
+        margin: '0 auto',
+        [theme.breakpoints.up('lg')]: {
+            maxWidth: '1140px'
+        }
     },
     content: {
-        width: '50%',
-        overflowY: 'auto',
+        width: '100%',
+        height: '100%',
+        maxHeight: '100%',
+        overflow: 'scroll',
         [theme.breakpoints.down('sm')]: {
             width: '85%'
         },
@@ -31,10 +33,9 @@ const useStyle = makeStyles(theme => ({
     },
     sidebar: {
         height: '100%',
-        maxWidth: '25%',
-        width: '25%',
-        backgroundColor: 'lightyellow',
+        width: '100%',
         display: 'flex',
+        paddingTop: '50%',
         flexDirection: 'column',
         [theme.breakpoints.down('sm')]: {
             width: '15%'
@@ -44,8 +45,8 @@ const useStyle = makeStyles(theme => ({
         }
     },
     sideInfo: {
-        width: '25%',
-        backgroundColor: 'lightgrey',
+        width: '100%',
+        height: '100%',
         [theme.breakpoints.down('sm')]: {
             display: 'none'
         }
@@ -58,14 +59,23 @@ const UserLayout = (props) => {
     const currentSelectedIndex = items.findIndex(item => item.path === location.pathname)
     const [selected, setSelected] = useState(currentSelectedIndex)
     return (
-        <div className={classes.root} >
-            <SideNav className={classes.sidebar} items={items} selected={selected} onClick={setSelected} />
-            <div className={classes.content}>
-                <Header title={items[selected].title} />
-                {children}
-            </div>
-            <SideInfo className={classes.sideInfo} />
-        </div>
+        <>
+            <Navbar title={items[selected].title} />
+            <Grid className={classes.root}
+                container
+                alignItems="stretch"
+            >
+                <Grid item md={3}>
+                    <SideNav className={classes.sidebar} items={items} selected={selected} onClick={setSelected} />
+                </Grid>
+                <Grid item md={6} className={classes.content}>
+                    {children}
+                </Grid>
+                <Grid item md={3}>
+                    <SideInfo className={classes.sideInfo} />
+                </Grid>
+            </Grid>
+        </>
     )
 }
 export default UserLayout
