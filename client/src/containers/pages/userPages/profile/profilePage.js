@@ -1,25 +1,18 @@
 import React, { useContext, useState } from 'react'
+import { DropzoneDialog } from 'material-ui-dropzone'
+import { Tabs, Tab, Avatar, Typography } from '@material-ui/core'
+import IconButton from '@material-ui/core/IconButton'
 
 import { useStyle } from './styles'
 import { AuthContext } from 'context/user/authContext'
 import { dateToString } from 'utils/dateUtils'
-import { DropzoneDialog } from 'material-ui-dropzone'
+import UserService from 'services/user/user'
 
-import AppBar from '@material-ui/core/AppBar'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import Avatar from '@material-ui/core/Avatar'
-import Typography from '@material-ui/core/Typography'
-
-import IconButton from '@material-ui/core/IconButton'
 import { a11yProps, TabPanel } from 'components/tabPanel/tabPanel'
 import PostsTab from './postsTab/postsTab'
-import Modal from 'containers/modal/modal'
-import ProfileImageDropzone from './profileImageDropzone/profileImageDropzone'
 
-import UserService from 'services/user/user'
 const ProfilePage = (props) => {
-    const { user } = useContext(AuthContext)
+    const { user, fetchUserData } = useContext(AuthContext)
     const [tabValue, setTabValue] = useState(0);
     const [openAvatarModal, setAvatarModal] = useState(false)
     const [imageToUpload, setImageToUpload] = useState()
@@ -36,14 +29,19 @@ const ProfilePage = (props) => {
     const handleProfileImageChange = (files) => {
         setImageToUpload(files)
     }
-    const handleProfileImageSave = () => {
-        console.log(imageToUpload)
+    const handleProfileImageSave = (files) => {
         const formData = new FormData();
-        formData.append('myfile', imageToUpload);
-        UserService.uploadProfileImage(imageToUpload)
-            .then(res => console.log(res))
+
+        formData.set(
+            'image',
+            imageToUpload[0],
+            `${imageToUpload[0].lastModified}-${imageToUpload[0].name}`
+        );
+        UserService.uploadProfileImage(formData)
+            .then(res => fetchUserData())
             .catch(err => console.log(err))
     }
+
     return (
         <div className={classes.root}>
             <div className={classes.banner}>
@@ -75,7 +73,12 @@ const ProfilePage = (props) => {
                 acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
                 showPreviews={true}
             />
-
+            {/* <Modal title="Upload image"
+                open={openAvatarModal}
+                onClose={handleAvatarModalClose}
+            >
+                <Dropzone onFilesDrop={handleFileDrop} />
+            </Modal> */}
 
 
         </div>

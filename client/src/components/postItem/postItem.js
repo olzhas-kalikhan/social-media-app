@@ -37,9 +37,10 @@ const useStyle = makeStyles(theme => ({
     },
     stats: {
         display: 'flex',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         marginTop: theme.spacing(1),
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '60%'
     },
     statsBtn: {
         color: '#3B5998',
@@ -91,7 +92,7 @@ const PostItem = (props) => {
                     </Button>
                     <Typography variant='caption'>{likes}</Typography>
                     <Button className={classes.statsBtn}><ChatBubbleOutlineIcon fontSize="small" /></Button>
-                    <Typography variant='caption'>{likes}</Typography>
+                    <Typography variant='caption'>{post.comments.length}</Typography>
 
                     <Button className={classes.statsBtn}><RepeatIcon fontSize="small" /></Button>
                 </div>

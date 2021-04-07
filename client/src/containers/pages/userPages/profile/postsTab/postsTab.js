@@ -29,9 +29,7 @@ const PostsTab = (props) => {
             fetchPosts()
         })
     }
-    useEffect(() => {
-        fetchPosts()
-    }, [])
+    useEffect(fetchPosts, [])
     return (
         <>
             <form className={classes.root} onSubmit={handleSubmit}>
