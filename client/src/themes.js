@@ -27,7 +27,7 @@ const mainTheme = createMuiTheme({
         h5: {
             fontWeight: '600',
             fontFamily: "'Baloo Chettan 2', cursive",
-            fontSize: '1.8rem',
+            fontSize: '1.6rem',
         },
         h6: {
             fontWeight: '400',

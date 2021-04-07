@@ -10,8 +10,14 @@ export default {
             .then(res => res.json())
             .then(data => data)
     },
+    getAllPosts: () => {
+        return fetch('/post/allPosts')
+            .then(res => res.json())
+            .then(data => data)
+    },
     getCurrentUserPosts: () => {
-        return fetch('/post/myPosts').then(res => res.json())
+        return fetch('/post/myPosts')
+            .then(res => res.json())
             .then(data => data)
     },
     likeComment: (postID) => {

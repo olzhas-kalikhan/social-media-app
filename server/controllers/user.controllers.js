@@ -1,13 +1,20 @@
 const keys = require('../config/keys')
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
-
+const multer = require('multer');
+const path = require('path');
 
 const firebase = require('firebase/app')
 require('firebase/storage')
 firebase.initializeApp(keys.firebaseConfig)
 const storageRef = firebase.storage().ref();
 
+const { Storage } = require('@google-cloud/storage');
+const storage = new Storage({
+    projectId: keys.firebaseConfig.projectId,
+    keyFilename: path.join(__dirname, '../config/social-network-storage-firebase-adminsdk-pdrtl-60c4bc7d88.json'),
+});
+const bucket = storage.bucket(keys.firebaseConfig.storageBucket);
 
 const { BadRequest, NotFound } = require('../utils/erros')
 const signToken = userId => {
@@ -57,7 +64,7 @@ exports.logout = (req, res) => {
     return res.json({ user: { email: "", username: "", role: "", date: "", name: "", profileImage: "" }, success: true })
 }
 exports.authenticated = (req, res) => {
-    const {_id, email, role, date, name, profileImage, username } = req.user
+    const { _id, email, role, date, name, profileImage, username } = req.user
     return res.status(200).json({ isAuthenticated: true, user: { _id, email, role, date, username, name, profileImage } })
 }
 
@@ -102,8 +109,49 @@ exports.searchUser = (req, res, next) => {
     )
 }
 
-exports.uploadProfileImage = (req, res, next) => {
-    const body = req.body
-    console.log(body)
-    return res.status(200).json(req.body)
+exports.uploadProfileImage = async (req, res, next) => {
+    try {
+        if (!req.file) {
+            throw new NotFound("File not uploaded")
+        }
+        const { _id, email, } = req.user
+        console.log(req.file)
+        // This is where we'll upload our file to Cloud Storage
+        // Create new blob in the bucket referencing the file
+        const blob = bucket.file(`${email}/${req.file.originalname}`);
+        console.log(blob.name, 'ffffff', encodeURI(blob.name))
+        // Create writable stream and specifying file mimetype
+        const blobWriter = blob.createWriteStream({
+            metadata: {
+                contentType: req.file.mimetype,
+            },
+        });
+
+        blobWriter.on('error', (err) => next(err, "hlello"));
+
+        blobWriter.on('finish', () => {
+            // Assembling public URL for accessing the file via HTTP
+            const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(blob.name)}?alt=media`;
+            User.findByIdAndUpdate(_id, { $set: { profileImage: publicUrl } })
+                .then(() => res
+                    .status(200)
+                    .send({ fileName: req.file.originalname, fileLocation: publicUrl })
+                )
+                .catch(err => { throw new Error(err) })
+            // Return the file name and its public URL
+
+        });
+
+        // When there is no more data to be consumed from the stream
+        blobWriter.end(req.file.buffer);
+    } catch (error) {
+        throw new Error("Couldn't upload file", error)
+    }
 }
+
+exports.uploader = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024, // keep images size < 5 MB
+    },
+});

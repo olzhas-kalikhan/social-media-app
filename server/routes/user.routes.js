@@ -12,5 +12,5 @@ router.get('/authenticated', passport.authenticate('jwt', { session: false }), U
 router.post('/followUser', passport.authenticate('jwt', { session: false }), UserControllers.addFriend)
 router.get('/following', passport.authenticate('jwt', { session: false }), UserControllers.getFollowing)
 router.post('/search', passport.authenticate('jwt', { session: false }), UserControllers.searchUser)
-router.post('/uploadProfileImage', passport.authenticate('jwt', { session: false }), UserControllers.uploadProfileImage)
+router.post('/uploadProfileImage', passport.authenticate('jwt', { session: false }), UserControllers.uploader.single('image'), UserControllers.uploadProfileImage)
 module.exports = router;

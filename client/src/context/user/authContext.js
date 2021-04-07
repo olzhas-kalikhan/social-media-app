@@ -6,19 +6,21 @@ export default ({ children }) => {
     const [user, setUser] = useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
-
-    useEffect(() => {
+    const fetchUserData = () => {
         authService.isAuthenticated()
             .then(data => {
                 setUser(data.user)
                 setIsAuthenticated(data.isAuthenticated)
                 setIsLoaded(true)
             })
-    }, [])
+    }
+
+
+    useEffect(fetchUserData, [])
     return (
         <div>
             {!isLoaded ? <h1>Loading</h1> :
-                <AuthContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated }}>
+                <AuthContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated, fetchUserData }}>
                     {children}
                 </AuthContext.Provider>
             }

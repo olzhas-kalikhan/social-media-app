@@ -20,12 +20,9 @@ export default {
             .then(data => data)
     },
     uploadProfileImage: (formData) => {
-        console.log(formData)
+
         return fetch('/user/uploadProfileImage', {
             method: 'POST',
-            headers: {
-                'Content-type': 'image/jpeg'
-            },
             body: formData,
         })
             .then(res => res.json())
