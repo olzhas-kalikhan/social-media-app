@@ -29,3 +29,5 @@
 /server/node_modules
 /server/.env
 /server/config/keys.js
+
+/server/config/social-network-storage-firebase-adminsdk-pdrtl-60c4bc7d88.json
