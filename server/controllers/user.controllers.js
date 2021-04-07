@@ -12,7 +12,7 @@ const storageRef = firebase.storage().ref();
 const { Storage } = require('@google-cloud/storage');
 const storage = new Storage({
     projectId: keys.firebaseConfig.projectId,
-    keyFilename: path.join(__dirname, '../config/social-network-storage-firebase-adminsdk-pdrtl-60c4bc7d88.json'),
+    keyFilename: path.join(__dirname, '../config/social-network-storage-firebase-adminsdk-pdrtl-9a449ec5e3.json'),
 });
 const bucket = storage.bucket(keys.firebaseConfig.storageBucket);
 
