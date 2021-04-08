@@ -1,4 +1,4 @@
-export default {
+const userService = {
     getFollowings: () => {
         return fetch('/user/following')
             .then(res => {
@@ -30,3 +30,4 @@ export default {
             .catch(err => console.error(err))
     }
 }
+export default userService

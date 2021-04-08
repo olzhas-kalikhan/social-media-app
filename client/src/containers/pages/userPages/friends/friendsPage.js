@@ -24,7 +24,7 @@ const FriendsPage = (props) => {
             .then(data => { setFoundUserList(data.users) })
     }
     const handleInputChange = (e) => {
-        if(e.target.value==''){
+        if (e.target.value === '') {
             setFoundUserList([])
         }
         setSearchQuery(e.target.value)
@@ -47,12 +47,12 @@ const FriendsPage = (props) => {
             </Paper>
             <List>
                 {followingList.length > 0 && followingList.map((user) =>
-                    <UserItem user={user} />
+                    <UserItem key={user.email} user={user} />
                 )}
             </List>
             <List>
                 {foundUserList.length > 0 && foundUserList.map((user) =>
-                    <UserItem user={user} />
+                    <UserItem key={user.email} user={user} />
                 )}
             </List>
         </div>

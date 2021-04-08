@@ -16,6 +16,7 @@ const PostsTab = (props) => {
             }
             else {
                 console.log(data)
+                setMessage(data)
             }
         })
     }
@@ -54,6 +55,7 @@ const PostsTab = (props) => {
                     <PostItem post={post} key={`post-${i}-${post.date}`} />
                 ))}
             </div>
+            {message && <div>{message}</div>}
         </>
     )
 }

@@ -1,4 +1,4 @@
-export default {
+const postService = {
     createPost: (post) => {
         return fetch('/post/add', {
             method: 'POST',
@@ -43,3 +43,4 @@ export default {
             .then(data => data)
     }
 }
+export default postService

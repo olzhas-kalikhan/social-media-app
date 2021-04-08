@@ -9,6 +9,12 @@ const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         width: '100%',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    userInfo:{
+        display:'flex',
+        alignItems: 'center'
     },
     avatar: {
         width: theme.spacing(8),
@@ -16,23 +22,28 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(0, 2)
     },
     followBtn: {
-        justifySelf: 'flex-end'
+        border: '5px solid #3B5998',
+        borderRadius: '50px',
+        color: '#3B5998'
     }
 }))
 
 const UserItem = (props) => {
     const classes = useStyles()
     const { user } = props
-    const { name, email, profileImage } = user
+    const { name, profileImage } = user
     return (
         <ListItem className={classes.root}>
-            <Avatar alt="Profile-Img"
-                className={classes.avatar}
-                src={profileImage}
-            />
-            <Typography variant='h6'>
-                {name}
-            </Typography>
+            <div className={classes.userInfo}>
+                <Avatar alt="Profile-Img"
+                    className={classes.avatar}
+                    src={profileImage}
+                />
+
+                <Typography variant='h5'>
+                    {name}
+                </Typography>
+            </div>
             <Button className={classes.followBtn}>Follow</Button>
         </ListItem>
     )

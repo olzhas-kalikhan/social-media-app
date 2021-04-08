@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Paper, Grid } from '@material-ui/core'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
+import { Grid, Typography, Button, Avatar } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { dateToString } from 'utils/dateUtils'
+
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import RepeatIcon from '@material-ui/icons/Repeat';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
-import { Avatar } from '@material-ui/core'
+
 import PostService from 'services/posts/postsService'
 import { AuthContext } from 'context/user/authContext'
 const useStyle = makeStyles(theme => ({
@@ -62,7 +61,6 @@ const PostItem = (props) => {
                 .then(res => { setLiked(false); setLikes(likes - 1) })
     }
     useEffect(() => {
-        console.log(post.likes, user._id)
         setLiked(post.likes.includes(user._id))
     }, [post, user])
     return (

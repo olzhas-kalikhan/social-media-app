@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
     root: {
-
+        
     },
     searchBar: {
         width: '90%',
@@ -11,9 +11,11 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1, 2),
         display: 'flex',
         alignItems: 'center',
+        borderRadius: '50px',
+        marginTop: theme.spacing(2)
     },
     inputField: {
-        width: '100%'
+        width: '100%',
     },
     submitBtn: {
         

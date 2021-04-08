@@ -1,18 +1,10 @@
-import React, { useContext, useCallback } from 'react'
-import Drawer from '@material-ui/core/Drawer'
-import List from '@material-ui/core/List'
+import React from 'react'
 import AuthService from 'services/auth/auth'
-import { AuthContext } from 'context/user/authContext'
-
 import NavItem from './navItem'
-import { makeStyles } from '@material-ui/core/styles'
-import { Button } from '@material-ui/core'
-import { useHistory } from 'react-router-dom';
+import { Button, List } from '@material-ui/core'
+
 const SideNav = (props) => {
     const { selected, onClick, items } = props
-    const auth = useContext(AuthContext)
-    const history = useHistory();
-
     const handleLogout = () => {
         AuthService.logout()
             .then(() => {

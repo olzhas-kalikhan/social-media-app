@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-export const styles = ((theme) => ({
+export const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
@@ -36,4 +36,4 @@ export const styles = ((theme) => ({
             cursor: 'pointer'
         }
     },
-}));
+}))

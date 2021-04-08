@@ -1,24 +1,15 @@
 import React, { useState, useContext } from 'react'
-import { styles } from './styles'
-import { withStyles } from '@material-ui/core/styles';
+import { useStyles } from './styles'
 
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import Link from '@material-ui/core/Link';
-
-
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-
+import { Button, Link, FormControl, Input, InputLabel, Typography } from '@material-ui/core'
 
 import { AuthContext } from 'context/user/authContext'
 import AuthService from 'services/auth/auth'
-import { Typography } from '@material-ui/core';
+
 
 const Login = (props) => {
-    const { classes, history, renderSignUp } = props;
+    const { history, renderSignUp } = props
+    const classes = useStyles()
     const authContext = useContext(AuthContext)
     const [message, setMessage] = useState(null)
     const [form, setForm] = useState({
@@ -90,4 +81,4 @@ const Login = (props) => {
     )
 }
 
-export default withStyles(styles)(Login)
+export default Login

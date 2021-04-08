@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
-import { styles } from './styles'
-import { withStyles } from '@material-ui/core/styles';
+import { useStyles } from './styles'
 
 import Grid from '@material-ui/core/Grid'
-import Button from '@material-ui/core/Button'
 
 import Login from 'components/Forms/login/login'
 import Register from 'components/Forms/login/register'
-import Modal from 'containers/modal/modal'
 
 const Welcome = (props) => {
-    const { classes } = props
+    const classes  = useStyles()
 
     const [signIn, setSignIn] = useState(true)
     const renderSignIn = () => setSignIn(true)
@@ -37,5 +34,5 @@ const Welcome = (props) => {
         </div>
     )
 }
-export default withStyles(styles)(Welcome)
+export default Welcome
 //<Register history={props.history} />

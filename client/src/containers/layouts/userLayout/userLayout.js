@@ -5,7 +5,6 @@ import SideNav from 'parts/sideNav/sideNav'
 import SideInfo from 'parts/sideInfo/sideInfo'
 import Navbar from 'parts/navbar/navbar'
 import { Grid } from '@material-ui/core'
-import Container from '@material-ui/core/Container'
 
 import { items } from 'parts/sideNav/items'
 

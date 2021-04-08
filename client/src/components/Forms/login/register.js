@@ -1,18 +1,16 @@
-import React, { useState, useContext } from 'react'
-import { styles } from './styles'
-import { withStyles } from '@material-ui/core/styles';
+import React, { useState } from 'react'
+import { useStyles } from './styles'
 
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import { Typography, FormControl, InputLabel, Input, Link } from '@material-ui/core'
+
+
+import { Typography, FormControl, InputLabel, Input, Link, Button } from '@material-ui/core'
 
 import AlertMessage from 'components/Alert/alertMessage'
-import { AuthContext } from 'context/user/authContext'
 import AuthService from 'services/auth/auth'
 
 const Register = (props) => {
-    const { classes, renderSignIn, history } = props;
-    const authContext = useContext(AuthContext)
+    const { renderSignIn, history } = props
+    const classes = useStyles()
     const [message, setMessage] = useState(null)
     const [form, setForm] = useState({
         username: '',
@@ -108,4 +106,4 @@ const Register = (props) => {
     )
 }
 
-export default withStyles(styles)(Register)
+export default Register

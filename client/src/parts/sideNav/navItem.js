@@ -11,7 +11,6 @@ const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
         textDecoration: 'none',
-        color: 'black',
         justifyContent: 'center ',
         color: "#3B5998"
     },

@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from 'react'
 import authService from '../../services/auth/auth'
 
 export const AuthContext = createContext()
-export default ({ children }) => {
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
@@ -27,3 +27,4 @@ export default ({ children }) => {
         </div>
     )
 }
+export default AuthProvider
