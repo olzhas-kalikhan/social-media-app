@@ -1,5 +1,6 @@
 const Post = require('../models/Post')
 const { BadRequest, NotFound } = require('../utils/erros')
+const { bucket } = require('./file.upload.helpers')
 
 exports.getAllPosts = (req, res, next) => {
     Post
@@ -38,11 +39,51 @@ const getPostsById = (id, req, res, next) => {
         })
 }
 
+exports.deletePost = (req, res, next) => {
+    const postId = req.body
+    
+    Post.deleteOne({ id: postId }, (err) => {
+        if (err)
+            return next(err)
+        else
+            return res.status(200).json({ message: { msgBody: "Post deleted", msgError: false } })
+    })
+}
+
 exports.createPost = (req, res, next) => {
     try {
         const { postText } = req.body
-        const { id } = req.user
-        const newPost = new Post({ postedBy: id, post: postText })
+        const { id, username } = req.user
+        const files = []
+
+        console.log(req.body)
+        if (req.files) {
+            for (let file of req.files) {
+
+                // This is where we'll upload our file to Cloud Storage
+                // Create new blob in the bucket referencing the file
+                const blob = bucket.file(`posts/${username}/${file.originalname}`);
+                // Create writable stream and specifying file mimetype
+                const blobWriter = blob.createWriteStream({
+                    metadata: {
+                        contentType: file.mimetype,
+                    },
+                });
+                blobWriter.on('error', (err) => next(err));
+                blobWriter.on('finish', () => {
+                    blob.makePublic()
+                    // Assembling public URL for accessing the file via HTTP
+
+                });
+                // When there is no more data to be consumed from the stream
+                blobWriter.end(file.buffer);
+                const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(blob.name)}?alt=media`;
+                files.push(publicUrl)
+            }
+
+        }
+        console.log(files)
+        const newPost = new Post({ postedBy: id, post: postText, files: files })
         newPost.save(err => {
             if (err)
                 next(err)
