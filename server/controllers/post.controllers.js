@@ -39,6 +39,17 @@ const getPostsById = (id, req, res, next) => {
         })
 }
 
+exports.deletePost = (req, res, next) => {
+    const postId = req.body
+    
+    Post.deleteOne({ id: postId }, (err) => {
+        if (err)
+            return next(err)
+        else
+            return res.status(200).json({ message: { msgBody: "Post deleted", msgError: false } })
+    })
+}
+
 exports.createPost = (req, res, next) => {
     try {
         const { postText } = req.body
