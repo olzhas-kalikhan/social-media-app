@@ -7,13 +7,13 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import AuthProvider from './context/user/authContext'
 import { mainTheme } from './themes'
 ReactDOM.render(
-  <React.StrictMode>
-    <AuthProvider>
-      <ThemeProvider theme={mainTheme}>
-        <App />
-      </ThemeProvider>
-    </AuthProvider>
-  </React.StrictMode>,
+
+  <AuthProvider>
+    <ThemeProvider theme={mainTheme}>
+      <App />
+    </ThemeProvider>
+  </AuthProvider>
+  ,
   document.getElementById('root')
 );
 

@@ -1,20 +1,9 @@
 const keys = require('../config/keys')
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
-const multer = require('multer');
-const path = require('path');
 
-const firebase = require('firebase/app')
-require('firebase/storage')
-firebase.initializeApp(keys.firebaseConfig)
-const storageRef = firebase.storage().ref();
-
-const { Storage } = require('@google-cloud/storage');
-const storage = new Storage({
-    projectId: keys.firebaseConfig.projectId,
-    keyFilename: path.join(__dirname, '../config/social-network-storage-firebase-adminsdk-pdrtl-9a449ec5e3.json'),
-});
-const bucket = storage.bucket(keys.firebaseConfig.storageBucket);
+const FileUploadHelpers = require('./file.upload.helpers')
+const bucket = FileUploadHelpers.bucket
 
 const { BadRequest, NotFound } = require('../utils/erros')
 const signToken = userId => {
@@ -127,7 +116,7 @@ exports.uploadProfileImage = async (req, res, next) => {
             },
         });
 
-        blobWriter.on('error', (err) => next(err, "hlello"));
+        blobWriter.on('error', (err) => next(err));
 
         blobWriter.on('finish', () => {
             // Assembling public URL for accessing the file via HTTP
@@ -149,9 +138,3 @@ exports.uploadProfileImage = async (req, res, next) => {
     }
 }
 
-exports.uploader = multer({
-    storage: multer.memoryStorage(),
-    limits: {
-        fileSize: 5 * 1024 * 1024, // keep images size < 5 MB
-    },
-});

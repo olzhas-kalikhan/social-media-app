@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { Grid, Typography, Button, Avatar } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+
 import { dateToString } from 'utils/dateUtils'
+import Modal from 'containers/modal/modal'
 
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -21,6 +23,9 @@ const useStyle = makeStyles(theme => ({
     },
     postContent: {
         width: '90%',
+    },
+    postImage: {
+        width: '100%'
     },
     postInfoContainer: {
         display: 'flex',
@@ -52,6 +57,8 @@ const PostItem = (props) => {
     const classes = useStyle()
     const [liked, setLiked] = useState(false)
     const [likes, setLikes] = useState(post.likes.length)
+    const [imageModal, setImageModal] = useState(false)
+    const [currentImage, setCurrentImage] = useState("")
     const handleLikeIcon = () => {
         if (!liked)
             PostService.likeComment(post._id)
@@ -60,42 +67,64 @@ const PostItem = (props) => {
             PostService.unLikeComment(post._id)
                 .then(res => { setLiked(false); setLikes(likes - 1) })
     }
+    const gridWidth = (length) => {
+        if (length === 1) return 12
+        if (length === 2) return 6
+        if (length === 3) return 4
+        return 3
+    }
+    const handleImageClick = (file) => {
+        setCurrentImage(file)
+        setImageModal(true)
+    }
+    const handleModalClose = () => {
+        setImageModal(false)
+    }
     useEffect(() => {
         setLiked(post.likes.includes(user._id))
     }, [post, user])
     return (
-        <Grid container className={classes.root} key={post.date}>
-            <Grid item xs={2} >
-                <Avatar className={classes.avatar} src={post.postedBy.profileImage} />
-            </Grid>
-            <Grid item xs={10} className={classes.postInfoContainer}>
-                <div className={classes.postContent}>
-                    <Grid container className={classes.postInfo}>
-                        <Grid item xs={3}>
-                            <Typography variant='h5'>{post.postedBy.name}</Typography>
-                        </Grid>
-                        <Grid item xs={5} />
+        <>
+            <Grid container className={classes.root} key={post.date}>
+                <Grid item xs={2} >
+                    <Avatar className={classes.avatar} src={post.postedBy.profileImage} />
+                </Grid>
+                <Grid item xs={10} className={classes.postInfoContainer}>
+                    <div className={classes.postContent}>
+                        <Grid container className={classes.postInfo}>
+                            <Grid item xs={3}>
+                                <Typography variant='h5'>{post.postedBy.name}</Typography>
+                            </Grid>
+                            <Grid item xs={5} />
 
-                        <Grid item xs={4}>
-                            <Typography variant='subtitle1'>{dateToString(post.date)}</Typography>
+                            <Grid item xs={4}>
+                                <Typography variant='subtitle1'>{dateToString(post.date)}</Typography>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                    <Typography variant='subtitle2'>{post.post}</Typography>
-                </div>
-                <div className={classes.stats}>
-                    <Button className={classes.statsBtn} onClick={handleLikeIcon}>
-                        {liked ?
-                            <FavoriteIcon fontSize="small" /> :
-                            <FavoriteBorderIcon fontSize="small" />}
-                    </Button>
-                    <Typography variant='caption'>{likes}</Typography>
-                    <Button className={classes.statsBtn}><ChatBubbleOutlineIcon fontSize="small" /></Button>
-                    <Typography variant='caption'>{post.comments.length}</Typography>
+                        <Typography variant='subtitle2'>{post.post}</Typography>
+                    </div>
+                    {post.files.length > 0 &&
+                        <Grid container>
 
-                    <Button className={classes.statsBtn}><RepeatIcon fontSize="small" /></Button>
-                </div>
+                            {post.files.map((file, i, files) => <Grid item xs={gridWidth(files.length)}> <img className={classes.postImage} src={file} onClick={() => handleImageClick(file)} /></Grid>)}
+                        </Grid>
+                    }
+                    <div className={classes.stats}>
+                        <Button className={classes.statsBtn} onClick={handleLikeIcon}>
+                            {liked ?
+                                <FavoriteIcon fontSize="small" /> :
+                                <FavoriteBorderIcon fontSize="small" />}
+                        </Button>
+                        <Typography variant='caption'>{likes}</Typography>
+                        <Button className={classes.statsBtn}><ChatBubbleOutlineIcon fontSize="small" /></Button>
+                        <Typography variant='caption'>{post.comments.length}</Typography>
+
+                        <Button className={classes.statsBtn}><RepeatIcon fontSize="small" /></Button>
+                    </div>
+                </Grid>
             </Grid>
-        </Grid>
+            <Modal open={imageModal} onClose={handleModalClose}><img src={currentImage} className={classes.postImage}/></Modal>
+        </>
     )
 }
 

@@ -1,11 +1,8 @@
 const postService = {
-    createPost: (post) => {
+    createPost: (formdata) => {
         return fetch('/post/add', {
             method: 'POST',
-            body: JSON.stringify({ postText: post }),
-            headers: {
-                'Content-Type': 'application/json',
-            }
+            body: formdata,
         })
             .then(res => res.json())
             .then(data => data)
