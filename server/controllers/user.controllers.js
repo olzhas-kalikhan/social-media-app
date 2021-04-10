@@ -1,4 +1,4 @@
-const keys = require('../config/keys')
+const keys = JSON.parse(process.env.KEYS)
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 

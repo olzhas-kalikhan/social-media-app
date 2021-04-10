@@ -7,7 +7,7 @@ const passport = require('passport')
 require('./config/passport')(passport)
 require('dotenv').config()
 const port = process.env.PORT || 5000
-const keys = require('./config/keys')
+const keys = JSON.parse(process.env.KEYS)
 
 const userRoutes = require('./routes/user.routes')
 const postRoutes = require('./routes/post.routes')
