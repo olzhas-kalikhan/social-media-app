@@ -1,6 +1,6 @@
 const authService = {
     login: (user) => {
-        return fetch('/user/login', {
+        return fetch('/api/user/login', {
             method: 'POST',
             body: JSON.stringify(user),
             headers: {
@@ -10,7 +10,7 @@ const authService = {
             .then(data => data)
     },
     register: user => {
-        return fetch('/user/register', {
+        return fetch('/api/user/register', {
             method: 'POST',
             body: JSON.stringify(user),
             headers: { 'Content-Type': 'application/json' }
@@ -18,11 +18,11 @@ const authService = {
             .then(data => data)
     },
     logout: () => {
-        return fetch('/user/logout')
+        return fetch('/api/user/logout')
             .then(res => res.json()).then(data => data)
     },
     isAuthenticated: () => {
-        return fetch('/user/authenticated')
+        return fetch('/api/user/authenticated')
             .then(res => {
                 if (res.status !== 401)
                     return res.json().then(data => data)

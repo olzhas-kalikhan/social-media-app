@@ -1,6 +1,6 @@
 const postService = {
     createPost: (formdata) => {
-        return fetch('/post/add', {
+        return fetch('/api/post/add', {
             method: 'POST',
             body: formdata,
         })
@@ -8,17 +8,17 @@ const postService = {
             .then(data => data)
     },
     getAllPosts: () => {
-        return fetch('/post/allPosts')
+        return fetch('/api/post/allPosts')
             .then(res => res.json())
             .then(data => data)
     },
     getCurrentUserPosts: () => {
-        return fetch('/post/myPosts')
+        return fetch('/api/post/myPosts')
             .then(res => res.json())
             .then(data => data)
     },
     likeComment: (postID) => {
-        return fetch('/post/likeComment', {
+        return fetch('/api/post/likeComment', {
             method: 'POST',
             body: JSON.stringify({ postId: postID }),
             headers: {
@@ -29,7 +29,7 @@ const postService = {
             .then(data => data)
     },
     unLikeComment: (postID) => {
-        return fetch('/post/unLikeComment', {
+        return fetch('/api/post/unLikeComment', {
             method: 'POST',
             body: JSON.stringify({ postId: postID }),
             headers: {
@@ -40,7 +40,7 @@ const postService = {
             .then(data => data)
     },
     deletePost: (post) => {
-        return fetch('/post/deletePost', {
+        return fetch('/api/post/deletePost', {
             method: 'POST',
             body: JSON.stringify({ post: post }),
             headers: {

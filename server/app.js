@@ -8,7 +8,7 @@ require('./config/passport')(passport)
 require('dotenv').config()
 const port = process.env.PORT || 5000
 const keys = JSON.parse(process.env.KEYS)
-
+const path = require('path');
 const userRoutes = require('./routes/user.routes')
 const postRoutes = require('./routes/post.routes')
 
@@ -43,10 +43,17 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(passport.initialize())
 //Routes
-app.use('/', require('./routes/index.routes'))
-app.use('/user', userRoutes)
-app.use('/post', postRoutes)
+
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+app.use('/api', require('./routes/index.routes'))
+app.use('/api/user', userRoutes)
+app.use('/api/post', postRoutes)
 app.use(handleErrors)
+
+app.get('/*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+});
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 })

@@ -1,6 +1,6 @@
 const userService = {
     getFollowings: () => {
-        return fetch('/user/following')
+        return fetch('/api/user/following')
             .then(res => {
                 if (res.status !== 401)
                     return res.json().then(data => data.following)
@@ -9,7 +9,7 @@ const userService = {
             })
     },
     searchUser: (query) => {
-        return fetch('/user/search', {
+        return fetch('/api/user/search', {
             method: 'POST',
             body: JSON.stringify({ query }),
             headers: {
@@ -21,7 +21,7 @@ const userService = {
     },
     uploadProfileImage: (formData) => {
 
-        return fetch('/user/uploadProfileImage', {
+        return fetch('/api/user/uploadProfileImage', {
             method: 'POST',
             body: formData,
         })

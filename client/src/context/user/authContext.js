@@ -13,6 +13,7 @@ const AuthProvider = ({ children }) => {
                 setIsAuthenticated(data.isAuthenticated)
                 setIsLoaded(true)
             })
+            .catch(err => console.log(err))
     }
 
 
