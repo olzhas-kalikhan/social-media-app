@@ -92,7 +92,7 @@ const PostItem = (props) => {
     }
     const handleDeleteMenuItem = () => {
         PostService.deletePost(post)
-            .then(res => { console.log(res); refresh() })
+            .then(res => { refresh() })
             .catch(err => console.log(err))
     }
     useEffect(() => {

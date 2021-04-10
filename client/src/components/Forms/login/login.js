@@ -36,7 +36,6 @@ const Login = (props) => {
         event.preventDefault()
         AuthService.login(form)
             .then(data => {
-                console.log(data)
                 const { isAuthenticated, user, message } = data
                 if (isAuthenticated) {
                     authContext.setUser(user)

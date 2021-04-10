@@ -8,7 +8,6 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => {
             if (!isAuthenticated)
                 return <Redirect to={{ pathname: '/', state: { from: props.location } }} />
 
-            console.log(user.role)
             if (!roles.includes(user.role))
                 return <Redirect to={{ pathname: '/profile', state: { from: props.location } }} />
             return <Component {...props} />
