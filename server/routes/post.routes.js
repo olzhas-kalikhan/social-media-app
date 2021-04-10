@@ -9,5 +9,5 @@ router.get('/allPosts', passport.authenticate('jwt', { session: false }), PostCo
 router.get('/myPosts', passport.authenticate('jwt', { session: false }), PostControllers.getPostsByCurrentUserId)
 router.post('/likeComment', passport.authenticate('jwt', { session: false }), PostControllers.likeComment)
 router.post('/unLikeComment', passport.authenticate('jwt', { session: false }), PostControllers.unLikeComment)
-
+router.post('/deletePost', passport.authenticate('jwt', { session: false }), PostControllers.deletePost)
 module.exports = router

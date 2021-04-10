@@ -38,6 +38,17 @@ const postService = {
         })
             .then(res => res.json())
             .then(data => data)
+    },
+    deletePost: (post) => {
+        return fetch('/post/deletePost', {
+            method: 'POST',
+            body: JSON.stringify({ post: post }),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(res => res.json())
+            .then(data => data)
     }
 }
 export default postService

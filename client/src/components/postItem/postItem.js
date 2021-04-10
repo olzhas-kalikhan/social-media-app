@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { Grid, Typography, Button, Avatar } from '@material-ui/core'
+import { Grid, Typography, Button, Avatar, Menu, MenuItem } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { dateToString } from 'utils/dateUtils'
@@ -9,6 +9,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import RepeatIcon from '@material-ui/icons/Repeat';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import PostService from 'services/posts/postsService'
 import { AuthContext } from 'context/user/authContext'
@@ -52,13 +53,22 @@ const useStyle = makeStyles(theme => ({
 }))
 
 const PostItem = (props) => {
-    const { post } = props
+    const { post, refresh } = props
     const { user } = useContext(AuthContext)
     const classes = useStyle()
     const [liked, setLiked] = useState(false)
     const [likes, setLikes] = useState(post.likes.length)
     const [imageModal, setImageModal] = useState(false)
     const [currentImage, setCurrentImage] = useState("")
+    const [menuElAnchor, setMenuElAnchor] = React.useState(null);
+
+    const handleMenuClick = (event) => {
+        setMenuElAnchor(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setMenuElAnchor(null);
+    };
     const handleLikeIcon = () => {
         if (!liked)
             PostService.likeComment(post._id)
@@ -80,51 +90,79 @@ const PostItem = (props) => {
     const handleModalClose = () => {
         setImageModal(false)
     }
+    const handleDeleteMenuItem = () => {
+        PostService.deletePost(post)
+            .then(res => { console.log(res); refresh() })
+            .catch(err => console.log(err))
+    }
     useEffect(() => {
         setLiked(post.likes.includes(user._id))
     }, [post, user])
     return (
-        <>
-            <Grid container className={classes.root} key={post.date}>
-                <Grid item xs={2} >
-                    <Avatar className={classes.avatar} src={post.postedBy.profileImage} />
-                </Grid>
-                <Grid item xs={10} className={classes.postInfoContainer}>
-                    <div className={classes.postContent}>
-                        <Grid container className={classes.postInfo}>
-                            <Grid item xs={3}>
-                                <Typography variant='h5'>{post.postedBy.name}</Typography>
-                            </Grid>
-                            <Grid item xs={5} />
 
-                            <Grid item xs={4}>
+        <Grid container className={classes.root}>
+            <Grid item xs={2} >
+                <Avatar className={classes.avatar} src={post.postedBy.profileImage} />
+            </Grid>
+            <Grid item xs={10} className={classes.postInfoContainer}>
+                <div className={classes.postContent}>
+                    <Grid container className={classes.postInfo}>
+                        <Grid item xs={3}>
+                            <Typography variant='h5'>{post.postedBy.name}</Typography>
+                        </Grid>
+                        <Grid item xs={5} />
+
+                        <Grid item xs={4} container alignItems='center'>
+
+                            <Grid item xs={10}>
                                 <Typography variant='subtitle1'>{dateToString(post.date)}</Typography>
                             </Grid>
-                        </Grid>
-                        <Typography variant='subtitle2'>{post.post}</Typography>
-                    </div>
-                    {post.files.length > 0 &&
-                        <Grid container>
+                            <Grid item xs={2}>
+                                <Button
+                                    aria-controls="simple-menu"
+                                    aria-haspopup="true"
+                                    onClick={handleMenuClick}
+                                >
+                                    <MoreVertIcon />
+                                </Button>
+                                <Menu
+                                    id="simple-menu"
+                                    keepMounted
+                                    anchorEl={menuElAnchor}
+                                    open={Boolean(menuElAnchor)}
+                                    onClose={handleClose}
+                                >
+                                    <MenuItem onClick={handleClose}>Report</MenuItem>
+                                    {user._id === post.postedBy._id && <MenuItem onClick={handleDeleteMenuItem}>Delete</MenuItem>}
+                                </Menu>
+                            </Grid>
 
-                            {post.files.map((file, i, files) => <Grid item xs={gridWidth(files.length)}> <img className={classes.postImage} src={file} onClick={() => handleImageClick(file)} /></Grid>)}
                         </Grid>
-                    }
-                    <div className={classes.stats}>
-                        <Button className={classes.statsBtn} onClick={handleLikeIcon}>
-                            {liked ?
-                                <FavoriteIcon fontSize="small" /> :
-                                <FavoriteBorderIcon fontSize="small" />}
-                        </Button>
-                        <Typography variant='caption'>{likes}</Typography>
-                        <Button className={classes.statsBtn}><ChatBubbleOutlineIcon fontSize="small" /></Button>
-                        <Typography variant='caption'>{post.comments.length}</Typography>
+                    </Grid>
+                    <Typography variant='subtitle2'>{post.post}</Typography>
+                </div>
+                {post.files.length > 0 &&
+                    <Grid container>
 
-                        <Button className={classes.statsBtn}><RepeatIcon fontSize="small" /></Button>
-                    </div>
-                </Grid>
+                        {post.files.map((file, i, files) => <Grid item xs={gridWidth(files.length)} key={file}> <img alt="post attached images" className={classes.postImage} src={file} onClick={() => handleImageClick(file)} /></Grid>)}
+                    </Grid>
+                }
+                <div className={classes.stats}>
+                    <Button className={classes.statsBtn} onClick={handleLikeIcon}>
+                        {liked ?
+                            <FavoriteIcon fontSize="small" /> :
+                            <FavoriteBorderIcon fontSize="small" />}
+                    </Button>
+                    <Typography variant='caption'>{likes}</Typography>
+                    <Button className={classes.statsBtn}><ChatBubbleOutlineIcon fontSize="small" /></Button>
+                    <Typography variant='caption'>{post.comments.length}</Typography>
+
+                    <Button className={classes.statsBtn}><RepeatIcon fontSize="small" /></Button>
+                </div>
             </Grid>
-            <Modal open={imageModal} onClose={handleModalClose}><img src={currentImage} className={classes.postImage}/></Modal>
-        </>
+            <Modal open={imageModal} onClose={handleModalClose}><img alt="post attached images" src={currentImage} className={classes.postImage} /></Modal>
+        </Grid>
+
     )
 }
 

@@ -38,7 +38,7 @@ const CreatePost = ({ onCreate }) => {
         setAttachFileModal(true)
     }
     const handleAttachedFilesSave = () => {
-        console.log(attachedFiles)
+        handleModalClose()
 
     }
     return (

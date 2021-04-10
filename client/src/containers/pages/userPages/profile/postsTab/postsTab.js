@@ -27,7 +27,7 @@ const PostsTab = (props) => {
             <CreatePost onCreate={fetchPosts} />
             <div className={classes.postList}>
                 {posts.map((post, i) => (
-                    <PostItem post={post} key={`post-${i}-${post.date}`} />
+                    <PostItem post={post} key={`post-${i}-${post.date}`} refresh={fetchPosts} />
                 ))}
             </div>
             {message && <div>{message}</div>}

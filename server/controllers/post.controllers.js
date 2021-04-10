@@ -40,14 +40,19 @@ const getPostsById = (id, req, res, next) => {
 }
 
 exports.deletePost = (req, res, next) => {
-    const postId = req.body
-    
-    Post.deleteOne({ id: postId }, (err) => {
-        if (err)
-            return next(err)
+    try {
+        const { post } = req.body
+        if (post.postedBy._id !== req.user.id)
+            throw new BadRequest("Unauthorized")
         else
-            return res.status(200).json({ message: { msgBody: "Post deleted", msgError: false } })
-    })
+            Post.deleteOne({ _id: post._id }, (err) => {
+                if (err)
+                    return next(err)
+                else
+                    return res.status(200).json({ message: { msgBody: "Post deleted", msgError: false } })
+            })
+    }
+    catch (err) { next(err) }
 }
 
 exports.createPost = (req, res, next) => {
@@ -57,6 +62,8 @@ exports.createPost = (req, res, next) => {
         const files = []
 
         console.log(req.body)
+        if (postText === "" && !req.files)
+            throw new BadRequest("Images or Text required")
         if (req.files) {
             for (let file of req.files) {
 
@@ -82,7 +89,6 @@ exports.createPost = (req, res, next) => {
             }
 
         }
-        console.log(files)
         const newPost = new Post({ postedBy: id, post: postText, files: files })
         newPost.save(err => {
             if (err)

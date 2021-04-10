@@ -19,7 +19,7 @@ const HomePage = () => {
     return (
         <div>
             {posts.map((post, i) => (
-                <PostItem post={post} key={`post-${i}-${post.date}`} />
+                <PostItem post={post} key={post._id} refresh={fetchPosts} />
             ))}
         </div>
     )
