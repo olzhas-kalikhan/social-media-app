@@ -44,7 +44,7 @@ app.use(bodyParser.json())
 app.use(passport.initialize())
 //Routes
 
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, './client/build')));
 
 app.use('/api', require('./routes/index.routes'))
 app.use('/api/user', userRoutes)
@@ -52,7 +52,7 @@ app.use('/api/post', postRoutes)
 app.use(handleErrors)
 
 app.get('/*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
 });
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
