@@ -10,23 +10,22 @@ import { Typography } from '@material-ui/core'
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
+        width: '100%',
         textDecoration: 'none',
         justifyContent: 'center ',
-        color: "#3B5998"
+        color: "#011640"
     },
     listItem: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: '50px',
-        width: '70%',
-        [theme.breakpoints.down('sm')]: {
-            width: '100%'
-        },
+        width: '100%',
 
     },
     selectedItem: {
-        backgroundColor:'none',
+        backgroundColor: 'none',
+        color: "#010626",
         "&hover": {
             background: "none",
             color: "grey"
@@ -34,6 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
     listItemText: {
         textAlign: 'center',
+        width: '100%',
         flex: '0.5 0.5',
         [theme.breakpoints.down('sm')]: {
             display: 'none'
@@ -64,10 +64,8 @@ const NavItem = (props) => {
                 <ListItemText
                     disableTypography
                     classes={{ root: classes.listItemText }}
-                    primary={
-                        <Typography variant='h5'>{text}</Typography>
-                    }
-                />
+
+                ><Typography variant='h5'>{text}</Typography></ListItemText>
             </ListItem>
 
 

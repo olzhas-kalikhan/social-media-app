@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useStyle } from './styles'
-import PostService from 'services/posts/postsService'
-import PostItem from 'components/postItem/postItem'
+import PostService from 'services/postsService'
+import PostItem from 'components/PostItem'
 import CreatePost from 'components/CreatePost'
 
 const PostsTab = (props) => {
@@ -16,7 +16,7 @@ const PostsTab = (props) => {
             }
             else {
                 console.log(data)
-                setMessage(data)
+                setMessage(data.message)
             }
         })
     }

@@ -4,7 +4,7 @@ import React from 'react'
 const SideInfo = (props) => {
 
     return (
-        <div className={props.className}>Info</div>
+        <div className={props.className}></div>
     )
 }
 export default SideInfo

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { TextField, Button, InputAdornment } from '@material-ui/core'
+import { TextField, Button, Grid } from '@material-ui/core'
 import { DropzoneDialog } from 'material-ui-dropzone'
 
-import PostService from 'services/posts/postsService'
+import PostService from 'services/postsService'
 import AttachmentOutlinedIcon from '@material-ui/icons/AttachmentOutlined'
 import { useStyles } from './styles'
 const CreatePost = ({ onCreate }) => {
@@ -21,10 +21,9 @@ const CreatePost = ({ onCreate }) => {
         for (let file of attachedFiles) {
             formData.append("attahcedFiles", file)
         }
-        console.log(formData)
         PostService.createPost(formData)
-            .then(data => {
-                console.log(data)
+            .then(() => {
+                setPost('')
                 onCreate()
             })
     }
@@ -51,21 +50,23 @@ const CreatePost = ({ onCreate }) => {
                     onChange={handlePostChange}
                     placeholder="New Post"
                     multiline
-                    InputProps={{
-                        endAdornment:
-                            <InputAdornment position="end">
-                                <Button onClick={handleModalOpen}><AttachmentOutlinedIcon /></Button>
-                            </InputAdornment>
-                    }}
                 />
-                <Button
-                    className={classes.submitButton}
-                    variant='contained'
-                    color='primary'
-                    type='submit'
-                >
-                    Post
-            </Button>
+                <Grid container>
+                    <Grid item xs={3}>
+                        <Button onClick={handleModalOpen}><AttachmentOutlinedIcon /></Button>
+                    </Grid>
+                    <Grid item xs={6}></Grid>
+                    <Grid item xs={3}>
+                        <Button
+                            className={classes.submitButton}
+                            variant='contained'
+                            color='primary'
+                            type='submit'
+                        >
+                            Post
+                    </Button>
+                    </Grid>
+                </Grid>
 
             </form>
             <DropzoneDialog

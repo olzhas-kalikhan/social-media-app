@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useStyles } from './styles'
-import UserItem from 'components/userItem/userItem'
-import UserService from 'services/user/user'
+import UserItem from 'components/UserItem'
+import UserService from 'services/user'
 import List from '@material-ui/core/List'
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
@@ -16,6 +16,9 @@ const FriendsPage = (props) => {
         UserService.getFollowings()
             .then(data => { setFollowingList(data) })
             .catch(err => console.log(err))
+        UserService.searchUser('')
+            .then(data => { setFoundUserList(data.users) })
+            .catch(err => console.log(err))
 
     }
     const handleSubmit = (event) => {
@@ -29,9 +32,7 @@ const FriendsPage = (props) => {
         }
         setSearchQuery(e.target.value)
     }
-    useEffect(() => {
-        fetchFollowings()
-    }, [])
+    useEffect(fetchFollowings, [])
     return (
         <div>
             <Paper component="form" className={classes.searchBar} onSubmit={handleSubmit} >

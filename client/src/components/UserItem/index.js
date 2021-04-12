@@ -22,9 +22,9 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(0, 2)
     },
     followBtn: {
-        border: '5px solid #3B5998',
+        border: '5px solid #011640',
         borderRadius: '50px',
-        color: '#3B5998'
+        color: '#011640'
     }
 }))
 
@@ -44,7 +44,7 @@ const UserItem = (props) => {
                     {name}
                 </Typography>
             </div>
-            <Button className={classes.followBtn}>Follow</Button>
+            <Button className={classes.followBtn}>Add</Button>
         </ListItem>
     )
 }

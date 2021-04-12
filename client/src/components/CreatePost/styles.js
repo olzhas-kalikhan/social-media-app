@@ -5,17 +5,17 @@ export const useStyles = makeStyles(theme => ({
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
-        padding: theme.spacing(2, 2),
+        padding: theme.spacing(2, 0),
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor:'#FFFFFF'
     },
     textArea: {
         width: '90%',
         margin: theme.spacing(1, 0)
     },
     submitButton: {
-        alignSelf: 'flex-center',
-        margin: theme.spacing(1, 5),
-        width: '40%'
+        width: '80%',
+        borderRadius:'30px'
     }
 }))

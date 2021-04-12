@@ -4,11 +4,11 @@ export const useStyle = makeStyles(theme => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
-        padding: theme.spacing(2, 2),
+        padding: theme.spacing(2, 0),
         justifyContent: 'center',
         alignItems: 'center'
     },
     postList:{
-        width:'90%',
+        width:'100%',
     }
 }))

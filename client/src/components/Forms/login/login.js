@@ -2,9 +2,9 @@ import React, { useState, useContext } from 'react'
 import { useStyles } from './styles'
 
 import { Button, Link, FormControl, Input, InputLabel, Typography } from '@material-ui/core'
-
+import AlertMessage from 'components/Alert'
 import { AuthContext } from 'context/user/authContext'
-import AuthService from 'services/auth/auth'
+import AuthService from 'services/auth'
 
 
 const Login = (props) => {
@@ -34,20 +34,27 @@ const Login = (props) => {
     }
     const handleSubmit = async (event) => {
         event.preventDefault()
-        AuthService.login(form)
-            .then(data => {
-                const { isAuthenticated, user, message } = data
-                if (isAuthenticated) {
-                    authContext.setUser(user)
-                    authContext.setIsAuthenticated(isAuthenticated)
-                    history.push('/home')
-                }
-                else {
-                    setMessage(message);
-                    console.log(message)
-                }
-            })
-            .catch(err => { console.log(err.response) })
+        if (form.email === '' || form.password === '')
+            setMessage('Please enter email and password')
+        else
+            AuthService.login(form)
+                .then(data => {
+                    console.log(data, 'ccccccccc')
+
+                    const { isAuthenticated, user, message } = data
+                    if (isAuthenticated) {
+                        authContext.setUser(user)
+                        authContext.setIsAuthenticated(isAuthenticated)
+                        history.push('/home')
+                    }
+                    else {
+                        setMessage(message)
+                        console.log(message, "message")
+                    }
+
+                })
+                .catch(() => setMessage("Wrong email and password combination"))
+
     }
     return (
         <form className={classes.root} onSubmit={handleSubmit}>
@@ -74,7 +81,7 @@ const Login = (props) => {
                     Login
                 </Typography>
             </Button>
-
+            <AlertMessage message={message} setMessage={setMessage} severity="error" />
 
         </form>
     )

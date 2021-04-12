@@ -2,13 +2,18 @@ import { createMuiTheme } from '@material-ui/core/styles'
 
 
 const mainTheme = createMuiTheme({
+    palette: {
+        primary: {
+            main: "#011640"
+        }
+    },
 
     typography: {
         h1: {
             fontSize: "3.2rem",
             fontWeight: '700',
             fontFamily: "'Baloo Chettan 2', cursive",
-            color: "#3B5998"
+            color: "#011640"
         },
         h2: {
             fontSize: "3rem",
@@ -49,7 +54,7 @@ const mainTheme = createMuiTheme({
         caption: {
             fontFamily: "'Ubuntu', sans-serif",
             fontWeight: '600',
-            color: "#3B5998",
+            color: "#404040",
             fontSize: '0.7rem'
         }
 

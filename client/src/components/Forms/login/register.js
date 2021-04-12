@@ -5,15 +5,20 @@ import { useStyles } from './styles'
 
 import { Typography, FormControl, InputLabel, Input, Link, Button } from '@material-ui/core'
 
-import AlertMessage from 'components/Alert/alertMessage'
-import AuthService from 'services/auth/auth'
+import AlertMessage from 'components/Alert'
+import AuthService from 'services/auth'
 
 const Register = (props) => {
     const { renderSignIn, history } = props
     const classes = useStyles()
+    const [fieldsError, setFieldsError] = useState({
+        email: false,
+        name: false,
+        password: false,
+        confirmPassword: false
+    })
     const [message, setMessage] = useState(null)
     const [form, setForm] = useState({
-        username: '',
         name: '',
         email: '',
         password: '',
@@ -31,12 +36,6 @@ const Register = (props) => {
             password: e.target.value
         }))
     }
-    const handleUsernameChange = (e) => {
-        setForm(prev => ({
-            ...prev,
-            username: e.target.value
-        }))
-    }
     const handleNameChange = (e) => {
         setForm(prev => ({
             ...prev,
@@ -51,6 +50,18 @@ const Register = (props) => {
     }
     const handleSubmit = async (event) => {
         event.preventDefault()
+        setFieldsError(prevState => {
+            let newState = prevState
+
+            newState.email = form.email === ''
+            newState.name = form.name === ''
+            newState.password = form.password === ''
+            newState.confirmPassword = form.confirmPassword === ''
+            return newState
+        })
+        if (form.password !== form.confirmPassword)
+            setMessage("Passwords don't match")
+
         AuthService.register(form)
             .then(data => {
                 console.log(data.status)
@@ -64,23 +75,19 @@ const Register = (props) => {
     return (
         <form className={classes.root} onSubmit={handleSubmit}>
             <Typography variant="h1">SIGN UP</Typography>
-            <FormControl className={classes.formElement}>
-                <InputLabel htmlFor="username-signup">Username</InputLabel>
-                <Input id="username-signup" value={form.username} onChange={handleUsernameChange} />
-            </FormControl>
-            <FormControl className={classes.formElement}>
+            <FormControl className={classes.formElement} error={fieldsError.email}>
                 <InputLabel htmlFor="email-signup">Email</InputLabel>
                 <Input id="email-signup" type="email" value={form.email} onChange={handleEmailChange} />
             </FormControl>
-            <FormControl className={classes.formElement}>
+            <FormControl className={classes.formElement} error={fieldsError.name}>
                 <InputLabel htmlFor="name-signup">Name</InputLabel>
                 <Input id="name-signup" value={form.name} onChange={handleNameChange} />
             </FormControl>
-            <FormControl className={classes.formElement}>
+            <FormControl className={classes.formElement} error={fieldsError.password}>
                 <InputLabel htmlFor="password-signup">Password</InputLabel>
                 <Input id="password-signup" type="password" value={form.password} onChange={handlePasswordChange} />
             </FormControl>
-            <FormControl className={classes.formElement}>
+            <FormControl className={classes.formElement} error={fieldsError.confirmPassword}>
                 <InputLabel htmlFor="confirm-password-signup">Confirm Password</InputLabel>
                 <Input id="confirm-password-signup" type="password" value={form.confirmPassword} onChange={handleConfirmPasswordChange} />
             </FormControl>

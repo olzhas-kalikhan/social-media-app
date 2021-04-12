@@ -7,8 +7,8 @@ const UserSchema = new mongoose.Schema({
     },
     username: {
         type: String,
-        required: true,
         unique: true,
+        default: ''
     },
     email: {
         type: String,
@@ -57,5 +57,6 @@ UserSchema.methods.comparePassword = function (password, cb) {
 
     })
 }
+UserSchema.index({ email: 1, username: 1 }, { unique: true, sparse: true })
 const User = mongoose.model('User', UserSchema);
 module.exports = User;

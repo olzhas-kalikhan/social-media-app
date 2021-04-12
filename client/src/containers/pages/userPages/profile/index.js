@@ -6,10 +6,10 @@ import IconButton from '@material-ui/core/IconButton'
 import { useStyle } from './styles'
 import { AuthContext } from 'context/user/authContext'
 import { dateToString } from 'utils/dateUtils'
-import UserService from 'services/user/user'
+import UserService from 'services/user'
 
-import { a11yProps, TabPanel } from 'components/tabPanel/tabPanel'
-import PostsTab from './postsTab/postsTab'
+import { a11yProps, TabPanel } from 'components/TabPanel'
+import PostsTab from './PostsTab'
 
 const ProfilePage = (props) => {
     const { user, fetchUserData } = useContext(AuthContext)
@@ -38,7 +38,7 @@ const ProfilePage = (props) => {
             `${imageToUpload[0].lastModified}-${imageToUpload[0].name}`
         );
         UserService.uploadProfileImage(formData)
-            .then(res => fetchUserData())
+            .then(res => { fetchUserData(); handleAvatarModalClose() })
             .catch(err => console.log(err))
     }
 

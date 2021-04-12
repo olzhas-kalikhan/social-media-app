@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import SideNav from 'parts/sideNav/sideNav'
-import SideInfo from 'parts/sideInfo/sideInfo'
-import Navbar from 'parts/navbar/navbar'
+import SideNav from 'parts/SideNav'
+import SideInfo from 'parts/SideInfo'
+import Navbar from 'parts/Navbar'
 import { Grid } from '@material-ui/core'
 
-import { items } from 'parts/sideNav/items'
+import { items } from 'parts/SideNav/items'
 
 const useStyle = makeStyles(theme => ({
     root: {
@@ -23,24 +23,23 @@ const useStyle = makeStyles(theme => ({
         maxHeight: '100%',
         overflow: 'scroll',
         [theme.breakpoints.down('sm')]: {
-            width: '85%'
+            order: '2',
         },
-        [theme.breakpoints.down('xs')]: {
-            width: '100%'
-        }
 
     },
     sidebar: {
         height: '100%',
-        width: '100%',
+        width: '80%',
         display: 'flex',
         paddingTop: '50%',
         flexDirection: 'column',
-        [theme.breakpoints.down('sm')]: {
-            width: '15%'
-        },
+        alignItems: 'center',
+        margin: '0 auto',
         [theme.breakpoints.down('xs')]: {
-            display: 'none'
+            paddingTop: '0',
+            flexDirection: 'row',
+            order: '3',
+            height: '10%',
         }
     },
     sideInfo: {
@@ -64,10 +63,10 @@ const UserLayout = (props) => {
                 container
                 alignItems="stretch"
             >
-                <Grid item md={3}>
+                <Grid item md={3} xs={12}>
                     <SideNav className={classes.sidebar} items={items} selected={selected} onClick={setSelected} />
                 </Grid>
-                <Grid item md={6} className={classes.content}>
+                <Grid item md={6} xs={12} className={classes.content}>
                     {children}
                 </Grid>
                 <Grid item md={3}>

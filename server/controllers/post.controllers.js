@@ -60,8 +60,6 @@ exports.createPost = (req, res, next) => {
         const { postText } = req.body
         const { id, username } = req.user
         const files = []
-
-        console.log(req.body)
         if (postText === "" && !req.files)
             throw new BadRequest("Images or Text required")
         if (req.files) {

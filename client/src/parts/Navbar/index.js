@@ -6,7 +6,7 @@ const useStyle = makeStyles(theme => ({
     root: {
         display: 'flex',
         width: '100%',
-        backgroundColor: '#3B5998',
+        backgroundColor: '#011640',
         color: '#FFFFFF',
         height: theme.spacing(7),
         minHeight: '5vh',

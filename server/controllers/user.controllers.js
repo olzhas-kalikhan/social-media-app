@@ -14,20 +14,17 @@ const signToken = userId => {
 }
 
 exports.register = (req, res, next) => {
-    const { email, name, username, password, role } = req.body
-    User.findOne({ $or: [{ email }, { username }] }, (err, user) => {
+    const { email, name, password, role } = req.body
+    User.findOne({ email }, (err, user) => {
         try {
             if (err)
                 return next(err)
             if (user) {
-                if (user.email === email)
-                    throw new BadRequest('Email already exist')
-                if (user.username === username)
-                    throw new BadRequest('Username already taken')
+                throw new BadRequest('Email already exist')
             }
             //return res.status(400).json({ message: { msgBody: "Email already exist", msgError: true } })
             else {
-                const newUser = new User({ email, name, username, password, role })
+                const newUser = new User({ email, name, password, role })
                 newUser.save(err => {
                     if (err)
                         return next(err)
@@ -47,6 +44,9 @@ exports.login = (req, res) => {
         res.cookie('access_token', token, { httpOnly: true, sameSite: true })
         return res.status(200).json({ isAuthenticated: true, user: { _id, email, role, date, username, name, profileImage } })
     }
+    else {
+        return res.status(401).json({ isAuthenticated: false, user: { email: "", username: "", role: "", date: "", name: "", profileImage: "" } })
+    }
 }
 exports.logout = (req, res) => {
     res.clearCookie('access_token')
@@ -61,7 +61,6 @@ exports.addFriend = (req, res, next) => {
     const { friendUserId } = req.body
     const { _id } = req.user
     User.findByIdAndUpdate(_id, { $push: { following: friendUserId } }, (err, user) => {
-        console.log(user)
         if (err)
             return next(err)
         else
@@ -104,11 +103,10 @@ exports.uploadProfileImage = async (req, res, next) => {
             throw new NotFound("File not uploaded")
         }
         const { _id, email, } = req.user
-        console.log(req.file)
         // This is where we'll upload our file to Cloud Storage
         // Create new blob in the bucket referencing the file
         const blob = bucket.file(`${email}/${req.file.originalname}`);
-        console.log(blob.name, 'ffffff', encodeURI(blob.name))
+
         // Create writable stream and specifying file mimetype
         const blobWriter = blob.createWriteStream({
             metadata: {
@@ -134,7 +132,7 @@ exports.uploadProfileImage = async (req, res, next) => {
         // When there is no more data to be consumed from the stream
         blobWriter.end(req.file.buffer);
     } catch (error) {
-        throw new Error("Couldn't upload file", error)
+        throw new Error(error)
     }
 }
 

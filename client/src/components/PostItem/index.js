@@ -3,7 +3,7 @@ import { Grid, Typography, Button, Avatar, Menu, MenuItem } from '@material-ui/c
 import { makeStyles } from '@material-ui/core/styles'
 
 import { dateToString } from 'utils/dateUtils'
-import Modal from 'containers/modal/modal'
+import Modal from 'components/Modal'
 
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -11,14 +11,14 @@ import RepeatIcon from '@material-ui/icons/Repeat';
 import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-import PostService from 'services/posts/postsService'
+import PostService from 'services/postsService'
 import { AuthContext } from 'context/user/authContext'
 const useStyle = makeStyles(theme => ({
     root: {
         width: '100%',
         WebkitBoxSizing: 'border-box',
         height: 'auto',
-        padding: theme.spacing(2, 2, 1),
+        padding: theme.spacing(2, 0, 1),
         backgroundColor: '#FFFFFF',
         borderTop: '2px solid #D0D0D0'
     },
@@ -26,7 +26,7 @@ const useStyle = makeStyles(theme => ({
         width: '90%',
     },
     postImage: {
-        width: '100%'
+        width: '90%'
     },
     postInfoContainer: {
         display: 'flex',
@@ -48,7 +48,7 @@ const useStyle = makeStyles(theme => ({
         width: '60%'
     },
     statsBtn: {
-        color: '#3B5998',
+        color: '#404040',
     }
 }))
 
@@ -107,10 +107,10 @@ const PostItem = (props) => {
             <Grid item xs={10} className={classes.postInfoContainer}>
                 <div className={classes.postContent}>
                     <Grid container className={classes.postInfo}>
-                        <Grid item xs={3}>
+                        <Grid item xs={8}>
                             <Typography variant='h5'>{post.postedBy.name}</Typography>
                         </Grid>
-                        <Grid item xs={5} />
+                    
 
                         <Grid item xs={4} container alignItems='center'>
 
