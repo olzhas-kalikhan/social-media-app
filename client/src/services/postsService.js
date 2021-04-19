@@ -12,13 +12,18 @@ const postService = {
             .then(res => res.json())
             .then(data => data)
     },
+    getReplies: (postId) => {
+        return fetch(`/api/post/${postId}/replies`)
+            .then(res => res.json())
+            .then(data => data)
+    },
     getCurrentUserPosts: () => {
         return fetch('/api/post/myPosts')
             .then(res => res.json())
             .then(data => data)
     },
     likeComment: (postID) => {
-        return fetch('/api/post/likeComment', {
+        return fetch('/api/post/likePost', {
             method: 'POST',
             body: JSON.stringify({ postId: postID }),
             headers: {
@@ -29,7 +34,7 @@ const postService = {
             .then(data => data)
     },
     unLikeComment: (postID) => {
-        return fetch('/api/post/unLikeComment', {
+        return fetch('/api/post/unLikePost', {
             method: 'POST',
             body: JSON.stringify({ postId: postID }),
             headers: {

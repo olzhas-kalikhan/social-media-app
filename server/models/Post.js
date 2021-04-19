@@ -1,18 +1,5 @@
 const mongoose = require('mongoose')
-const CommentSchema = new mongoose.Schema({
-    author: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'User',
-        required: true
-    },
-    date: {
-        type: Date,
-        default: Date.now()
-    },
-    comment: {
-        type: String,
-        required: true
-    }
-}, { id: false })
+
 const PostSchema = new mongoose.Schema({
     postedBy: {
         type: mongoose.Schema.Types.ObjectId, ref: 'User',
@@ -20,22 +7,25 @@ const PostSchema = new mongoose.Schema({
     },
     date: {
         type: Date,
-        default: Date.now()
+        default: (new Date())
     },
     post: {
         type: String,
     },
-    comments: {
-        type: [CommentSchema],
-        default: []
-    },
     likes: [{
         type: mongoose.Schema.Types.ObjectId, ref: 'User',
     }],
+    replies: [{
+        type: mongoose.Schema.Types.ObjectId, ref: 'Post',
+        default: []
+    }],
     files: [{
         type: String
-    }]
-
+    }],
+    isReply: {
+        type: Boolean,
+        default: false
+    }
 })
 
 const Post = mongoose.model('Post', PostSchema, 'posts')

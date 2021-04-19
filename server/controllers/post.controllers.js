@@ -3,26 +3,12 @@ const { BadRequest, NotFound } = require('../utils/erros')
 const { bucket } = require('./file.upload.helpers')
 
 exports.getAllPosts = (req, res, next) => {
-    Post
-        .find({})
-        .sort({ date: 'desc' })
-        .limit(20)
-        .populate('postedBy', 'name email username profileImage')
-        .exec((err, posts) => {
-            try {
-                if (err)
-                    return next(err)
-                if (posts.length > 0)
-                    return res.status(200).json({ message: { msgBody: "Posts found", msgError: false }, posts })
-                else
-                    throw new NotFound("Posts not found")
-            }
-            catch (err) { return next(err) }
-        })
+    getPostsById(null, false, req, res, next)
 }
 
-const getPostsById = (id, req, res, next) => {
-    Post.find({ postedBy: id })
+const getPostsById = (id, reply, req, res, next) => {
+    let query = id ? { postedBy: id } : {}
+    Post.find({ ...query, isReply: reply })
         .sort('-date')
         .limit(10)
         .populate('postedBy', 'name email username profileImage')
@@ -57,8 +43,8 @@ exports.deletePost = (req, res, next) => {
 
 exports.createPost = (req, res, next) => {
     try {
-        const { postText } = req.body
-        const { id, username } = req.user
+        const { postText, postId } = req.body
+        const { id, email } = req.user
         const files = []
         if (postText === "" && !req.files)
             throw new BadRequest("Images or Text required")
@@ -67,7 +53,7 @@ exports.createPost = (req, res, next) => {
 
                 // This is where we'll upload our file to Cloud Storage
                 // Create new blob in the bucket referencing the file
-                const blob = bucket.file(`posts/${username}/${file.originalname}`);
+                const blob = bucket.file(`${email}/posts/${file.originalname}`);
                 // Create writable stream and specifying file mimetype
                 const blobWriter = blob.createWriteStream({
                     metadata: {
@@ -87,28 +73,58 @@ exports.createPost = (req, res, next) => {
             }
 
         }
-        const newPost = new Post({ postedBy: id, post: postText, files: files })
+        const newPost = new Post({ postedBy: id, post: postText, files: files, isReply: postId !== undefined })
+        if (postId) {
+            Post.findOneAndUpdate({ _id: postId }, { $push: { replies: newPost._id } }, (err) => {
+                if (err)
+                    return next(err)
+            })
+        }
         newPost.save(err => {
             if (err)
-                next(err)
+                return next(err)
             else
                 return res.status(201).json({ message: { msgBody: "Post succesfully added", msgError: false } })
         })
+
     }
     catch (err) { next(err) }
+}
+exports.getRepliesByPostId = (req, res, next) => {
+    const { id } = req.params
+    Post.findById(id)
+        .populate({
+            path: 'replies',
+            ref: Post,
+            populate: {
+                path: 'postedBy',
+                select: 'name email username profileImage'
+            }
+        })
+        .exec((err, post) => {
+            try {
+                if (err)
+                    return next(err)
+                if (post)
+                    return res.status(200).json({ message: { msgBody: "Comments found", msgError: false }, replies: post.replies })
+                else
+                    throw new NotFound("Comments not found")
+            }
+            catch (err) { return next(err) }
+        })
 }
 
 exports.getPostsByUserId = (req, res, next) => {
     const { userId } = req.body
-    getPostsById(userId, req, res, next)
+    getPostsById(userId, false, req, res, next)
 }
 
 exports.getPostsByCurrentUserId = (req, res, next) => {
     const { id } = req.user
-    getPostsById(id, req, res, next)
+    getPostsById(id, false, req, res, next)
 }
 
-exports.likeComment = (req, res, next) => {
+exports.likePost = (req, res, next) => {
     const { id } = req.user
     const { postId } = req.body
     Post.findByIdAndUpdate(postId, { $push: { likes: id } }, (err, post) => {
@@ -120,7 +136,7 @@ exports.likeComment = (req, res, next) => {
 
     })
 }
-exports.unLikeComment = (req, res, next) => {
+exports.unLikePost = (req, res, next) => {
     const { id } = req.user
     const { postId } = req.body
     Post.findByIdAndUpdate(postId, { $pull: { likes: id } }, (err, post) => {

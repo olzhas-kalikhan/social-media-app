@@ -25,7 +25,7 @@ const Modal = (props) => {
             fullWidth
             maxWidth='sm'
         >
-            <DialogTitle className={classes.title}>{title}</DialogTitle>
+            {title && <DialogTitle className={classes.title}>{title}</DialogTitle>}
             <DialogContent>{children}</DialogContent>
         </Dialog>
     )

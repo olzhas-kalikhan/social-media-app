@@ -5,7 +5,7 @@ import { DropzoneDialog } from 'material-ui-dropzone'
 import PostService from 'services/postsService'
 import AttachmentOutlinedIcon from '@material-ui/icons/AttachmentOutlined'
 import { useStyles } from './styles'
-const CreatePost = ({ onCreate }) => {
+const CreatePost = ({ onCreate, onSubmit }) => {
     const classes = useStyles()
     const [post, setPost] = useState('')
     const [attachFileModal, setAttachFileModal] = useState(false)
@@ -15,12 +15,16 @@ const CreatePost = ({ onCreate }) => {
     }
     const handleSubmit = (event) => {
         event.preventDefault()
+
         const formData = new FormData();
         formData.append('postText', post)
 
-        for (let file of attachedFiles) {
-            formData.append("attahcedFiles", file)
-        }
+        attachedFiles.forEach((file, i) => {
+            formData.append("attahcedFiles", file, `${Date.now()}-File${i + 1}`)
+        })
+        if (onSubmit)
+            onSubmit(formData)
+
         PostService.createPost(formData)
             .then(() => {
                 setPost('')
@@ -76,6 +80,7 @@ const CreatePost = ({ onCreate }) => {
                 onSave={handleAttachedFilesSave}
                 acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']}
                 showPreviews={true}
+                maxFileSize={6 * 1024 * 1024}
             />
         </>
     )

@@ -104,7 +104,7 @@ const Register = (props) => {
 
             </Button>
             <Typography >
-                Already have an account yet?
+                Already have an account?
                 <Link onClick={renderSignIn}> Login</Link>
             </Typography>
 

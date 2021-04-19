@@ -11,7 +11,7 @@ const storage = new Storage({
 exports.uploader = multer({
     storage: multer.memoryStorage(),
     limits: {
-        fileSize: 5 * 1024 * 1024, // keep images size < 5 MB
+        fileSize: 6 * 1024 * 1024, // keep images size < 6 MB
     },
 });
 

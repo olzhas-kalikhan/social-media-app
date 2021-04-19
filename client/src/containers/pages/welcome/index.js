@@ -18,10 +18,9 @@ const Welcome = (props) => {
         <div className={classes.root}>
             <Grid
                 container
+                justify='center'
             >
-                <Grid item xs={12} sm={6}>
-
-                </Grid>
+         
                 <Grid className={classes.menu} item xs={12} sm={6}>
                     {signIn ?
                         <Login history={props.history} renderSignUp={renderSignUp} /> :
