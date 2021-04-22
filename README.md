@@ -7,7 +7,7 @@ Demo: https://smedia-app.herokuapp.com
 
 # Main Dependencies:
 
-## Frontend:
+## Frontend
 
 * React (Mainly hooks; global state stored using Context API)
 * React-router
@@ -15,7 +15,7 @@ Demo: https://smedia-app.herokuapp.com
 * Moment
 
 
-## Backend (NodeJS):
+## Backend (NodeJS)
 
 * Express
 * firebase
